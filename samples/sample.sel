@@ -1,0 +1,6 @@
+(let Fibonacci (Y (λ f (λ n
+  ((((If ((≤ n) 1))
+   (λ _ n))
+   (λ _ ((+ (f ((- n) 1))) (f ((- n) 2)))))
+   ∅)))))
+(show (Fibonacci 10))
