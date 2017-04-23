@@ -13,23 +13,18 @@ const isApplication =
   (node: ASTNode): boolean => firstChildType(node) !== 'VAR_DEC' && firstChildType(node) !== 'LAMBDA_DEC';
 
 export const toJS = (node: ASTNode): ?string => {
-  const currentNodeType = node.body.type;
-  let buffer = '';
-  switch (currentNodeType) {
-  case 'PROGRAM': buffer = node.children.map(toJS).join(';\n') + ';'; break;
+  switch (node.body.type) {
+  case 'PROGRAM':
+    return node.children.map(toJS).join(';\n') + ';';
   case 'VAR_DEC':
-    buffer = `const ${node.body.name} = `;
-    break;
+    return `const ${node.body.name} = `;
   case 'LAMBDA_DEC':
-    buffer = `(${node.body.input} => ${node.children.map(toJS).join('')})`;
-    break;
+    return `(${node.body.input} => ${node.children.map(toJS).join('')})`;
   case 'ATOM':
-    buffer = node.body.name;
-    break;
+    return node.body.name;
   case 'LIST':
     if (node.children.length === 0) {
       throwEmptyListError();
-      break;
     }
     if (isApplication(node)) {
       if (node.children.length < 2) {
@@ -38,12 +33,8 @@ export const toJS = (node: ASTNode): ?string => {
       }
       const namedLambdaNode = node.children[0];
       const lambdaArgumentNode = node.children[1];
-      buffer = `${toJS(namedLambdaNode)}(${toJS(lambdaArgumentNode)})`;
-    } else {
-      buffer = node.children.map(toJS).join('');
+      return `${toJS(namedLambdaNode)}(${toJS(lambdaArgumentNode)})`;
     }
-    break;
+    return node.children.map(toJS).join('');
   }
-
-  return buffer;
 };

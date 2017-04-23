@@ -50,12 +50,6 @@ export default (tokens: TokenType[]): ASTNode => {
         name: tokens[++tokenPointer].name,
       });
       break;
-    case 'LAMBDA_DEC':
-      addAndMoveToNode({
-        ...token,
-        input: tokens[++tokenPointer].name,
-      });
-      break;
     default: addToCurrentNode(token);
     }
     tokenPointer++;
