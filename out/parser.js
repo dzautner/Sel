@@ -26,6 +26,12 @@ exports.default = tokens => {
     const nextToken = tokens[tokenPointer + 1];
     switch (token.type) {
       case 'OPEN_PARA':
+        if (nextToken.type === 'VAR_DEC') {
+          addAndMoveToNode(_extends({}, tokens[++tokenPointer], {
+            name: tokens[++tokenPointer].name
+          }));
+          break;
+        }
         if (nextToken.type === 'LAMBDA_DEC') {
           addAndMoveToNode(_extends({}, tokens[++tokenPointer], {
             input: tokens[++tokenPointer].name
@@ -37,16 +43,6 @@ exports.default = tokens => {
         }
       case 'CLOSE_PARA':
         closeCurrentNode();break;
-      case 'VAR_DEC':
-        addToCurrentNode(_extends({}, token, {
-          name: tokens[++tokenPointer].name
-        }));
-        break;
-      case 'LAMBDA_DEC':
-        addAndMoveToNode(_extends({}, token, {
-          input: tokens[++tokenPointer].name
-        }));
-        break;
       default:
         addToCurrentNode(token);
     }
