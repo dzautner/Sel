@@ -13,22 +13,27 @@
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-eslint": "^7.2.3",
+    "babel-istanbul": "^0.12.2",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-flow": "^6.23.0",
     "chai": "^3.5.0",
+    "coveralls": "^2.13.0",
     "eslint": "^3.19.0",
     "eslint-plugin-flowtype": "^2.32.1",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-node": "^4.2.2",
     "flow": "^0.2.3",
     "flow-bin": "^0.44.2",
+    "istanbul": "^0.4.5",
     "mocha": "^3.2.0"
   },
   "scripts": {
     "clean": "rm out/*",
     "build": "./node_modules/.bin/babel src/ --out-dir=out && chmod +x out/index.js && cp src/*.sel out/",
-    "test": "./node_modules/.bin/mocha --compilers js:babel-core/register"
+    "test": "./node_modules/.bin/mocha --compilers js:babel-core/register",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
+    "coverage": "./node_modules/.bin/babel-istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-core/register "
   },
   "author": "",
   "license": "ISC"
