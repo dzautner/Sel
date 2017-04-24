@@ -14,7 +14,7 @@ const firstChildType =
 const isApplication =
   (node: ASTNode): boolean => firstChildType(node) !== 'VAR_DEC' && firstChildType(node) !== 'LAMBDA_DEC';
 
-type TokenHandler = (node: ASTNode, compile: Compiler) => string;
+type TokenHandler = (node: ASTNode, compile: Compiler, heap: {}) => string;
 
 type TokenHandlers = {
   PROGRAM: TokenHandler,
@@ -42,7 +42,7 @@ const getCompiler = (tokenHandlers: TokenHandlers): Compiler => {
       node.children.length === 0 && throwEmptyListError();
       if (isApplication(node)) {
         node.children.length < 2 && throwEmptyApplicationError();
-        return tokenHandlers.LAMBDA_APPLICATION(buildLambdaApplicationNode(...node.children), Compile);
+        return tokenHandlers.LAMBDA_APPLICATION(buildLambdaApplicationNode(...node.children), Compile, heap);
       }
       return node.children.map(Compile).join('');
     }
