@@ -11,8 +11,17 @@ export const compile = async (raw: string, compilerName: string = 'JavaScript'):
   const tree = parse(tokens);
   const builtins = await openFile('../src/builtins.js');
   const code = compiler(tree);
+  const churchNotation = Compilers.ChurchNotation(tree);
   return `
 ${builtins}
+
+/**
+The corresponding code in Church Encoding:
+
+${churchNotation}
+
+**/
+
 ${code}
   `;
 };
