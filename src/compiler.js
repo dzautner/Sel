@@ -29,7 +29,6 @@ export const toJS = (node: ASTNode): ?string => {
     if (isApplication(node)) {
       if (node.children.length < 2) {
         throwEmptyApplicationError();
-        break;
       }
       const namedLambdaNode = node.children[0];
       const lambdaArgumentNode = node.children[1];
