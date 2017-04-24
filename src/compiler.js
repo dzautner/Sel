@@ -12,7 +12,7 @@ const firstChildType =
 const isApplication =
   (node: ASTNode): boolean => firstChildType(node) !== 'VAR_DEC' && firstChildType(node) !== 'LAMBDA_DEC';
 
-export const toJS = (node: ASTNode): ?string => {
+export const toJS = (node: ASTNode): string => {
   switch (node.body.type) {
   case 'PROGRAM':
     return node.children.map(toJS).join(';\n') + ';';
@@ -36,16 +36,17 @@ export const toJS = (node: ASTNode): ?string => {
     }
     return node.children.map(toJS).join('');
   }
+  return '';
 };
 
 const varMap = {};
-export const toPointFreeJS = (node: ASTNode): ?string => {
+export const toPointFreeJS = (node: ASTNode): string => {
   switch (node.body.type) {
   case 'PROGRAM':
     return node.children.map(toPointFreeJS).join('');
   case 'VAR_DEC':
     varMap[node.body.name] = node.children.map(toPointFreeJS).join('');
-    return;
+    return '';
   case 'LAMBDA_DEC':
     return `(${node.body.input} => ${node.children.map(toPointFreeJS).join('')})`;
   case 'ATOM':
@@ -64,16 +65,17 @@ export const toPointFreeJS = (node: ASTNode): ?string => {
     }
     return node.children.map(toPointFreeJS).join('');
   }
+  return '';
 };
 
 const churchVarMap = {};
-export const toChurchNotation = (node: ASTNode): ?string => {
+export const toChurchNotation = (node: ASTNode): string => {
   switch (node.body.type) {
   case 'PROGRAM':
     return node.children.map(toChurchNotation).join('');
   case 'VAR_DEC':
     churchVarMap[node.body.name] = node.children.map(toChurchNotation).join('');
-    return;
+    return '';
   case 'LAMBDA_DEC':
     return `(lambda ${node.body.input}.${node.children.map(toChurchNotation).join('')})`;
   case 'ATOM':
@@ -92,4 +94,5 @@ export const toChurchNotation = (node: ASTNode): ?string => {
     }
     return node.children.map(toChurchNotation).join('');
   }
+  return '';
 };
