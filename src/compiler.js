@@ -45,7 +45,7 @@ export const toPointFreeJS = (node: ASTNode): ?string => {
     return node.children.map(toPointFreeJS).join('');
   case 'VAR_DEC':
     varMap[node.body.name] = node.children.map(toPointFreeJS).join('');
-    return
+    return;
   case 'LAMBDA_DEC':
     return `(${node.body.input} => ${node.children.map(toPointFreeJS).join('')})`;
   case 'ATOM':
@@ -92,4 +92,4 @@ export const toChurchNotation = (node: ASTNode): ?string => {
     }
     return node.children.map(toChurchNotation).join('');
   }
-}
+};
