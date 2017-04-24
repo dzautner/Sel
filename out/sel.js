@@ -15,17 +15,20 @@ var _parser = require('./parser.js');
 
 var _parser2 = _interopRequireDefault(_parser);
 
-var _compiler = require('./compiler.js');
+var _compilers = require('./compilers.js');
+
+var _compilers2 = _interopRequireDefault(_compilers);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const compile = exports.compile = async raw => {
+const compile = exports.compile = async (raw, compilerName = 'JavaScript') => {
+  const compiler = _compilers2.default[compilerName];
   const tokens = (0, _lexer2.default)(raw);
   const tree = (0, _parser2.default)(tokens);
   const builtins = await (0, _utils.openFile)('../src/builtins.js');
-  const JS = (0, _compiler.toJS)(tree);
+  const code = compiler(tree);
   return `
-    ${builtins}
-    ${JS}
+${builtins}
+${code}
   `;
 };
