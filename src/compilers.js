@@ -35,7 +35,7 @@ const buildLambdaApplicationNode = (lambdaNode: ASTNode, argumentNode: ASTNode):
 });
 
 const getCompiler = (tokenHandlers: TokenHandlers): Compiler => {
-
+  const heap = {};
   return function Compile(node: ASTNode): string {
     const nodeType = node.body.type;
     if (nodeType === 'LIST') {
@@ -46,7 +46,7 @@ const getCompiler = (tokenHandlers: TokenHandlers): Compiler => {
       }
       return node.children.map(Compile).join('');
     }
-    return tokenHandlers[nodeType](node, Compile);
+    return tokenHandlers[nodeType](node, Compile, heap);
   };
 
 };
@@ -60,15 +60,13 @@ const JavaScript = getCompiler({
   LIST:               (node, compile) => node.children.map(compile).join(''),
 });
 
-//TODO: move heap logic to getCompiler so it won't be shared between different runs of the function.
-const heap = {};
 const PointFreeJavaScript = getCompiler({
   PROGRAM:            (node, compile) => node.children.map(compile).join(''),
   LAMBDA_DEC:         (node, compile) => `(${node.body.input} => ${node.children.map(compile).join('')})`,
   LAMBDA_APPLICATION: (node, compile) => `${compile(node.body.lambda)}(${compile(node.body.argument)})`,
-  ATOM:               (node, compile) => heap[node.body.name] || node.body.name,
+  ATOM:               (node, compile, heap) => heap[node.body.name] || node.body.name,
   LIST:               (node, compile) => node.children.map(compile).join(''),
-  VAR_DEC:            (node, compile) => {
+  VAR_DEC:            (node, compile, heap) => {
     heap[node.body.name] = node.children.map(compile).join('');
     return '';
   },
@@ -78,9 +76,9 @@ const ChurchNotation = getCompiler({
   PROGRAM:            (node, compile) => node.children.map(compile).join(''),
   LAMBDA_DEC:         (node, compile) => `(λ ${node.body.input}.${node.children.map(compile).join('')})`,
   LAMBDA_APPLICATION: (node, compile) => `(${compile(node.body.lambda)}) (${compile(node.body.argument)})`,
-  ATOM:               (node, compile) => heap[node.body.name] || node.body.name,
+  ATOM:               (node, compile, heap) => heap[node.body.name] || node.body.name,
   LIST:               (node, compile) => node.children.map(compile).join(''),
-  VAR_DEC:            (node, compile) => {
+  VAR_DEC:            (node, compile, heap) => {
     heap[node.body.name] = node.children.map(compile).join('');
     return '';
   },
