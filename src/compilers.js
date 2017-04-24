@@ -60,38 +60,24 @@ const JavaScript = getCompiler({
   LIST:               (node, compile) => node.children.map(compile).join(''),
 });
 
+const heap = {};
+const PointFreeJavaScript = getCompiler({
+  PROGRAM:            (node, compile) => node.children.map(compile).join(''),
+  LAMBDA_DEC:         (node, compile) => `(${node.body.input} => ${node.children.map(compile).join('')})`,
+  LAMBDA_APPLICATION: (node, compile) => `${compile(node.body.lambda)}(${compile(node.body.argument)})`,
+  ATOM:               (node, compile) => heap[node.body.name] || node.body.name,
+  LIST:               (node, compile) => node.children.map(compile).join(''),
+  VAR_DEC:            (node, compile) => {
+    heap[node.body.name] = node.children.map(compile).join('');
+    return '';
+  },
+});
+
 export default {
   JavaScript,
+  PointFreeJavaScript,
 };
 
-const varMap = {};
-export const toPointFreeJS: Compiler = node => {
-  switch (node.body.type) {
-  case 'PROGRAM':
-    return node.children.map(toPointFreeJS).join('');
-  case 'VAR_DEC':
-    varMap[node.body.name] = node.children.map(toPointFreeJS).join('');
-    return '';
-  case 'LAMBDA_DEC':
-    return `(${node.body.input} => ${node.children.map(toPointFreeJS).join('')})`;
-  case 'ATOM':
-    return varMap[node.body.name] || node.body.name;
-  case 'LIST':
-    if (node.children.length === 0) {
-      throwEmptyListError();
-    }
-    if (isApplication(node)) {
-      if (node.children.length < 2) {
-        throwEmptyApplicationError();
-      }
-      const namedLambdaNode = node.children[0];
-      const lambdaArgumentNode = node.children[1];
-      return `${toPointFreeJS(namedLambdaNode)}(${toPointFreeJS(lambdaArgumentNode)})`;
-    }
-    return node.children.map(toPointFreeJS).join('');
-  }
-  return '';
-};
 
 const churchVarMap = {};
 export const toChurchNotation: Compiler = node => {
