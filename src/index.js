@@ -17,7 +17,7 @@ const pathToJSCode = async (path, options) => {
     return await compile(`
       ${options.removeBase ? '' : baseCode}
       ${selCode}
-    `);
+    `, options.compiler);
   } catch (e) {
     console.log(e);
     process.exit(1);
@@ -29,6 +29,7 @@ program
   .description('Compile the given SEL file to Javascript')
   .alias('c')
   .option('-rb, --remove-base', 'Set to true to remove base SEL lib')
+  .option('-co, --compiler [type]', 'Select which compiler to use ([JavaScript]/PointFreeJavaScript)', 'JavaScript')
   .action(async (path, options) => {
     console.log(await pathToJSCode(path, options));
   });
@@ -38,6 +39,7 @@ program
   .description('Compile the given SEL file to Javascript and eval it')
   .alias('r')
   .option('-rb, --remove-base', 'Set to true to remove base SEL lib')
+  .option('-co, --compiler [type]', 'Select which compiler to use ([JavaScript]/PointFreeJavaScript)', 'JavaScript')
   .action(async (path, options) => {
     eval(await pathToJSCode(path, options)); //eslint-disable-line
   });
