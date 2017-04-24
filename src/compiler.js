@@ -66,3 +66,30 @@ export const toPointFreeJS = (node: ASTNode): ?string => {
   }
 };
 
+const churchVarMap = {};
+export const toChurchNotation = (node: ASTNode): ?string => {
+  switch (node.body.type) {
+  case 'PROGRAM':
+    return node.children.map(toChurchNotation).join('');
+  case 'VAR_DEC':
+    churchVarMap[node.body.name] = node.children.map(toChurchNotation).join('');
+    return;
+  case 'LAMBDA_DEC':
+    return `(lambda ${node.body.input}.${node.children.map(toChurchNotation).join('')})`;
+  case 'ATOM':
+    return churchVarMap[node.body.name] || node.body.name;
+  case 'LIST':
+    if (node.children.length === 0) {
+      throwEmptyListError();
+    }
+    if (isApplication(node)) {
+      if (node.children.length < 2) {
+        throwEmptyApplicationError();
+      }
+      const namedLambdaNode = node.children[0];
+      const lambdaArgumentNode = node.children[1];
+      return `(${toChurchNotation(namedLambdaNode)} (${toChurchNotation(lambdaArgumentNode)}))`;
+    }
+    return node.children.map(toChurchNotation).join('');
+  }
+}
