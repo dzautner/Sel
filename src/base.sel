@@ -37,3 +37,7 @@
 (let 10              (Successor 9))
 
 (let Y               (λ f ((λ x (f (λ y ((x x) y)))) (λ x (f (λ y ((x x) y)))))))
+
+(let Pair (λ x (λ y (λ f ((f x) y)))))
+(let Left (λ p (p True)))
+(let Right (λ p (p False)))

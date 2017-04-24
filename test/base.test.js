@@ -326,3 +326,25 @@ describe('Comments', () => {
     `)).name).to.equal(TruthSymbol);
   });
 });
+
+
+describe('Pairs', () => {
+  describe('Left', () => {
+    it('Should return the left side of the pair', async () => {
+      const result = await run(`
+        (let myPair ((Pair 0) 1))
+        (toJSNumber (Left myPair))
+      `);
+      expect(result).to.equal(0);
+    });
+  });
+  describe('Right', () => {
+    it('Should return the right side of the pair', async () => {
+      const result = await run(`
+        (let myPair ((Pair 0) 1))
+        (toJSNumber (Right myPair))
+      `);
+      expect(result).to.equal(1);
+    });
+  });
+});
