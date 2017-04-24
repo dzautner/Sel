@@ -35,6 +35,7 @@ const toJS = exports.toJS = node => {
       }
       return node.children.map(toJS).join('');
   }
+  return '';
 };
 
 const varMap = {};
@@ -44,7 +45,7 @@ const toPointFreeJS = exports.toPointFreeJS = node => {
       return node.children.map(toPointFreeJS).join('');
     case 'VAR_DEC':
       varMap[node.body.name] = node.children.map(toPointFreeJS).join('');
-      return;
+      return '';
     case 'LAMBDA_DEC':
       return `(${node.body.input} => ${node.children.map(toPointFreeJS).join('')})`;
     case 'ATOM':
@@ -63,6 +64,7 @@ const toPointFreeJS = exports.toPointFreeJS = node => {
       }
       return node.children.map(toPointFreeJS).join('');
   }
+  return '';
 };
 
 const churchVarMap = {};
@@ -72,7 +74,7 @@ const toChurchNotation = exports.toChurchNotation = node => {
       return node.children.map(toChurchNotation).join('');
     case 'VAR_DEC':
       churchVarMap[node.body.name] = node.children.map(toChurchNotation).join('');
-      return;
+      return '';
     case 'LAMBDA_DEC':
       return `(lambda ${node.body.input}.${node.children.map(toChurchNotation).join('')})`;
     case 'ATOM':
@@ -91,4 +93,5 @@ const toChurchNotation = exports.toChurchNotation = node => {
       }
       return node.children.map(toChurchNotation).join('');
   }
+  return '';
 };
