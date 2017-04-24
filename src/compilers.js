@@ -24,7 +24,7 @@ type TokenHandlers = {
   ATOM: TokenHandler,
   LIST: TokenHandler,
 };
-
+//TODO: move to parser
 const buildLambdaApplicationNode = (lambdaNode: ASTNode, argumentNode: ASTNode): ASTNode => ({
   type: 'LAMBDA_APPLICATION',
   body: {
