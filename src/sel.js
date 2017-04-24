@@ -12,7 +12,7 @@ export const compile = async (raw: string, compilerName: string = 'JavaScript'):
   const builtins = await openFile('../src/builtins.js');
   const code = compiler(tree);
   return `
-    ${builtins}
-    ${code}
+${builtins}
+${code}
   `;
 };
