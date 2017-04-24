@@ -37,3 +37,32 @@ export const toJS = (node: ASTNode): ?string => {
     return node.children.map(toJS).join('');
   }
 };
+
+const varMap = {};
+export const toPointFreeJS = (node: ASTNode): ?string => {
+  switch (node.body.type) {
+  case 'PROGRAM':
+    return node.children.map(toPointFreeJS).join('');
+  case 'VAR_DEC':
+    varMap[node.body.name] = node.children.map(toPointFreeJS).join('');
+    return
+  case 'LAMBDA_DEC':
+    return `(${node.body.input} => ${node.children.map(toPointFreeJS).join('')})`;
+  case 'ATOM':
+    return varMap[node.body.name] || node.body.name;
+  case 'LIST':
+    if (node.children.length === 0) {
+      throwEmptyListError();
+    }
+    if (isApplication(node)) {
+      if (node.children.length < 2) {
+        throwEmptyApplicationError();
+      }
+      const namedLambdaNode = node.children[0];
+      const lambdaArgumentNode = node.children[1];
+      return `${toPointFreeJS(namedLambdaNode)}(${toPointFreeJS(lambdaArgumentNode)})`;
+    }
+    return node.children.map(toPointFreeJS).join('');
+  }
+};
+
