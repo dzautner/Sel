@@ -17,7 +17,7 @@ export const toJS = (node: ASTNode): ?string => {
   case 'PROGRAM':
     return node.children.map(toJS).join(';\n') + ';';
   case 'VAR_DEC':
-    return `const ${node.body.name} = `;
+    return `const ${node.body.name} = ${node.children.map(toJS).join('')}`;
   case 'LAMBDA_DEC':
     return `(${node.body.input} => ${node.children.map(toJS).join('')})`;
   case 'ATOM':

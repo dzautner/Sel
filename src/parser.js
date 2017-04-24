@@ -33,6 +33,13 @@ export default (tokens: TokenType[]): ASTNode => {
     const nextToken: TokenType = tokens[tokenPointer + 1];
     switch (token.type) {
     case 'OPEN_PARA':
+      if (nextToken.type === 'VAR_DEC') {
+        addAndMoveToNode({
+          ...(tokens[++tokenPointer]),
+          name: tokens[++tokenPointer].name,
+        });
+        break;
+      }
       if (nextToken.type === 'LAMBDA_DEC') {
         addAndMoveToNode({
           ...(tokens[++tokenPointer]),
@@ -44,12 +51,6 @@ export default (tokens: TokenType[]): ASTNode => {
         break;
       }
     case 'CLOSE_PARA': closeCurrentNode(); break;
-    case 'VAR_DEC':
-      addToCurrentNode({
-        ...token,
-        name: tokens[++tokenPointer].name,
-      });
-      break;
     default: addToCurrentNode(token);
     }
     tokenPointer++;
