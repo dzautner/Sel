@@ -329,6 +329,7 @@ describe('Comments', () => {
 
 
 describe('Pairs', () => {
+
   describe('Left', () => {
     it('Should return the left side of the pair', async () => {
       const result = await run(`
@@ -338,6 +339,7 @@ describe('Pairs', () => {
       expect(result).to.equal(0);
     });
   });
+
   describe('Right', () => {
     it('Should return the right side of the pair', async () => {
       const result = await run(`
@@ -347,4 +349,38 @@ describe('Pairs', () => {
       expect(result).to.equal(1);
     });
   });
+});
+
+
+describe('List', () => {
+
+  describe('Head', () => {
+    it('Should return head of the list', async () => {
+      const result = await run(`
+        (let myList ((List 0) ((List 1) ((List 2) ∅))))
+        (toJSNumber (Head myList))
+      `);
+      expect(result).to.equal(0);
+      expect(await run(`
+        (let myList ((List 0) ((List 1) ((List 2) ∅))))
+        (toJSNumber (Head (Tail myList)))
+      `)).to.equal(1)
+      expect(await run(`
+        (let myList ((List 0) ((List 1) ((List 2) ∅))))
+        (toJSNumber (Head (Tail (Tail myList))))
+      `)).to.equal(2)
+    });
+  });
+
+  describe('Nth', () => {
+    it('Should return the nth member of a list', async () => {
+      const nth = n => `
+        (toJSNumber ((Nth ((List 0) ((List 1) ((List 2) ∅)))) ${n}))
+      `
+      expect(await run(nth(0))).to.equal(0)
+      expect(await run(nth(1))).to.equal(1)
+      expect(await run(nth(2))).to.equal(2)
+    });
+  });
+
 });

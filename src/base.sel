@@ -41,3 +41,12 @@
 (let Pair (λ x (λ y (λ f ((f x) y)))))
 (let Left (λ p (p True)))
 (let Right (λ p (p False)))
+
+(let List (λ h (λ t ((Pair h) t))))
+(let Head (λ l (Left l)))
+(let Tail (λ l (Right l)))
+(let Nth (Y (λ f (λ l (λ n
+  ((((If (Is-Zero n))
+   (λ _ (Head l)))
+   (λ _ ((f (Tail l)) (Predecessor n))))
+   ∅))))))
