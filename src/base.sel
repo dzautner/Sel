@@ -56,3 +56,9 @@
    (λ _ (Head l)))
    (λ _ ((f (Tail l)) (Predecessor n))))
    ∅))))))
+
+(let Fold (Y (λ f (λ l (λ m (λ a
+  ((((If (Is-Empty l))
+   (λ _ a))
+   (λ _ (((f (Tail l)) m) ((m a) (Head l)))))
+   ∅)))))))

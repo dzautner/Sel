@@ -383,13 +383,25 @@ describe('List', () => {
     });
   });
 
-
   describe('Is-Empty', () => {
     it('should only return true for an empty list', async () => {
       expect((await run('(Is-Empty EmptyList)')).name).to.equal(TruthSymbol);
     });
     it('should only return false for a non-empty list', async () => {
-      expect((await run('(Is-Empty (List 1))')).name).to.equal(FalseSymbol);
+      expect((await run('(Is-Empty ((List 1) EmptyList))')).name).to.equal(FalseSymbol);
+    });
+  });
+
+  describe('Fold', () => {
+    it('should fold a list of values to a single one correctly', async () => {
+      const result = await run(`
+        (let MyList ((List 5)
+                    ((List 7)
+                    ((List 1) EmptyList))))
+        (let ListSum (((Fold MyList) +) 0))
+        (toJSNumber ListSum)
+      `);
+      expect(result).to.equal(13);
     });
   });
 });
