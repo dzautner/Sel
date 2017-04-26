@@ -23,6 +23,7 @@
 (let >               (λ m (λ n (¬ ((≤ m) n)))))
 (let ≥               (λ m (λ n ((≤ n) m))))
 (let ∅               (λ x True))
+(let Is-Null (λ l (λ h (True (λ d False)))))
 
 (let 0               (λ f Identity))
 (let 1               (Successor 0))
@@ -39,12 +40,17 @@
 (let Y               (λ f ((λ x (f (λ y ((x x) y)))) (λ x (f (λ y ((x x) y)))))))
 
 (let Pair (λ x (λ y (λ f ((f x) y)))))
+(let Triple (λ x (λ y (λ z (λ f (((f x) y) z))))))
+
 (let Left (λ p (p True)))
 (let Right (λ p (p False)))
 
-(let List (λ h (λ t ((Pair h) t))))
-(let Head (λ l (Left l)))
-(let Tail (λ l (Right l)))
+(let List      (λ h (λ t (((Triple h) t) False))))
+(let EmptyList (((Triple 0) 0) True))
+(let Head      (λ l (l (λ h (λ t (λ n h))))))
+(let Tail      (λ l (l (λ h (λ t (λ n t))))))
+(let Is-Empty  (λ l (l (λ h (λ t (λ n n))))))
+
 (let Nth (Y (λ f (λ l (λ n
   ((((If (Is-Zero n))
    (λ _ (Head l)))

@@ -383,4 +383,13 @@ describe('List', () => {
     });
   });
 
+
+  describe('Is-Empty', () => {
+    it('should only return true for an empty list', async () => {
+      expect((await run('(Is-Empty EmptyList)')).name).to.equal(TruthSymbol);
+    });
+    it('should only return false for a non-empty list', async () => {
+      expect((await run('(Is-Empty (List 1))')).name).to.equal(False);
+    });
+  });
 });
