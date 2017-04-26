@@ -62,3 +62,6 @@
    (λ _ a))
    (λ _ (((f (Tail l)) m) ((m a) (Head l)))))
    ∅)))))))
+
+(let MapRight (λ l (λ f (((Fold l) (λ nl (λ m ((List (f m)) nl)))) EmptyList))))
+(let Map      (λ l (λ f ((MapRight ((MapRight l) f)) Identity))))

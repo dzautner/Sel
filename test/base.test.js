@@ -404,4 +404,16 @@ describe('List', () => {
       expect(result).to.equal(13);
     });
   });
+  describe('Map', () => {
+    it('Should map alements with a function', async () => {
+      const result = await run(`
+        (let MyList ((List 5)
+                    ((List 7)
+                    ((List 1) EmptyList))))
+        (let MyList2 ((Map MyList) Successor))
+        (toJSNumber ((Nth MyList2) 1))
+      `);
+      expect(result).to.equal(8);
+    });
+  });
 });
