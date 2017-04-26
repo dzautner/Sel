@@ -389,7 +389,7 @@ describe('List', () => {
       expect((await run('(Is-Empty EmptyList)')).name).to.equal(TruthSymbol);
     });
     it('should only return false for a non-empty list', async () => {
-      expect((await run('(Is-Empty (List 1))')).name).to.equal(False);
+      expect((await run('(Is-Empty (List 1))')).name).to.equal(FalseSymbol);
     });
   });
 });
