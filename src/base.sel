@@ -65,3 +65,5 @@
 
 (let MapRight (λ l (λ f (((Fold l) (λ nl (λ m ((List (f m)) nl)))) EmptyList))))
 (let Map      (λ l (λ f ((MapRight ((MapRight l) f)) Identity))))
+(let Reverse  (λ l ((MapRight l) Identity)))
+(let Map      (λ l (λ f (Reverse ((MapRight l) f)))))
