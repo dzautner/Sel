@@ -66,3 +66,4 @@
 (let MapRight (λ l (λ f (((Fold l) (λ nl (λ m ((List (f m)) nl)))) EmptyList))))
 (let Reverse  (λ l ((MapRight l) Identity)))
 (let Map      (λ l (λ f (Reverse ((MapRight l) f)))))
+(let Length   (λ l (((Fold l) (λ len (λ _ (Successor len)))) 0)))

@@ -404,6 +404,7 @@ describe('List', () => {
       expect(result).to.equal(13);
     });
   });
+
   describe('Map', () => {
     it('Should map alements with a function', async () => {
       const result = await run(`
@@ -416,4 +417,16 @@ describe('List', () => {
       expect(result).to.equal(8);
     });
   });
+  describe('Length', () => {
+    it('Should return the length of a list', async () => {
+      const result = await run(`
+        (let MyList ((List 5)
+                    ((List 7)
+                    ((List 1) EmptyList))))
+        (toJSNumber (Length MyList))
+      `);
+      expect(result).to.equal(3);
+    });
+  });
+
 });
