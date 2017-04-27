@@ -417,6 +417,7 @@ describe('List', () => {
       expect(result).to.equal(8);
     });
   });
+
   describe('Length', () => {
     it('Should return the length of a list', async () => {
       const result = await run(`
@@ -429,4 +430,26 @@ describe('List', () => {
     });
   });
 
+  describe('Filter', () => {
+    it('Should filter a list', async () => {
+      const result = await run(`
+        (let MyList ((List 5)
+                    ((List 7)
+                    ((List 1) EmptyList))))
+        (let is7 (λ n ((= n) 7)))
+        (let FilteredList ((Filter MyList) is7))
+        (toJSNumber (Length FilteredList))
+      `);
+      const result2 = await run(`
+        (let MyList ((List 5)
+                    ((List 7)
+                    ((List 1) EmptyList))))
+        (let is7 (λ n ((= n) 7)))
+        (let FilteredList ((Filter MyList) is7))
+        (toJSNumber (Head FilteredList))
+      `);
+      expect(result).to.equal(1);
+      expect(result2).to.equal(7);
+    });
+  })
 });

@@ -67,3 +67,11 @@
 (let Reverse  (λ l ((MapRight l) Identity)))
 (let Map      (λ l (λ f (Reverse ((MapRight l) f)))))
 (let Length   (λ l (((Fold l) (λ len (λ _ (Successor len)))) 0)))
+
+(let Filter (λ l (λ p
+  (((Fold l) (λ acc (λ m
+   ((((If (p m))
+   (λ _ ((List m) acc)))
+   (λ _ acc))
+   ∅))))
+  EmptyList))))
