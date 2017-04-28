@@ -37,14 +37,13 @@
 (let 9               (Successor 8))
 (let 10              (Successor 9))
 
-(let Y               (λ f ((λ x (f (λ y ((x x) y)))) (λ x (f (λ y ((x x) y)))))))
+(let Y         (λ f ((λ x (f (λ y ((x x) y)))) (λ x (f (λ y ((x x) y)))))))
 
-(let Pair (λ x (λ y (λ f ((f x) y)))))
-(let Triple (λ x (λ y (λ z (λ f (((f x) y) z))))))
+(let Pair      (λ x (λ y (λ f ((f x) y)))))
+(let Left      (λ p (p True)))
+(let Right     (λ p (p False)))
 
-(let Left (λ p (p True)))
-(let Right (λ p (p False)))
-
+(let Triple    (λ x (λ y (λ z (λ f (((f x) y) z))))))
 (let List      (λ h (λ t (((Triple h) t) False))))
 (let EmptyList (((Triple 0) 0) True))
 (let Head      (λ l (l (λ h (λ t (λ n h))))))
