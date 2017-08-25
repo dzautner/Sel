@@ -23,6 +23,7 @@
 (let >               (λ m (λ n (¬ ((≤ m) n)))))
 (let ≥               (λ m (λ n ((≤ n) m))))
 (let ∅               (λ x True))
+(let Is-Null (λ l (λ h (True (λ d False)))))
 
 (let 0               (λ f Identity))
 (let 1               (Successor 0))
@@ -36,4 +37,40 @@
 (let 9               (Successor 8))
 (let 10              (Successor 9))
 
-(let Y               (λ f ((λ x (f (λ y ((x x) y)))) (λ x (f (λ y ((x x) y)))))))
+(let Y         (λ f ((λ x (f (λ y ((x x) y)))) (λ x (f (λ y ((x x) y)))))))
+
+(let Pair      (λ x (λ y (λ f ((f x) y)))))
+(let Left      (λ p (p True)))
+(let Right     (λ p (p False)))
+
+(let Triple    (λ x (λ y (λ z (λ f (((f x) y) z))))))
+(let List      (λ h (λ t (((Triple h) t) False))))
+(let EmptyList (((Triple 0) 0) True))
+(let Head      (λ l (l (λ h (λ t (λ n h))))))
+(let Tail      (λ l (l (λ h (λ t (λ n t))))))
+(let Is-Empty  (λ l (l (λ h (λ t (λ n n))))))
+
+(let Nth (Y (λ f (λ l (λ n
+  ((((If (Is-Zero n))
+   (λ _ (Head l)))
+   (λ _ ((f (Tail l)) (Predecessor n))))
+   ∅))))))
+
+(let Fold (Y (λ f (λ l (λ m (λ a
+  ((((If (Is-Empty l))
+   (λ _ a))
+   (λ _ (((f (Tail l)) m) ((m a) (Head l)))))
+   ∅)))))))
+
+(let MapRight (λ l (λ f (((Fold l) (λ nl (λ m ((List (f m)) nl)))) EmptyList))))
+(let Reverse  (λ l ((MapRight l) Identity)))
+(let Map      (λ l (λ f (Reverse ((MapRight l) f)))))
+(let Length   (λ l (((Fold l) (λ len (λ _ (Successor len)))) 0)))
+
+(let Filter (λ l (λ p
+  (((Fold l) (λ acc (λ m
+   ((((If (p m))
+   (λ _ ((List m) acc)))
+   (λ _ acc))
+   ∅))))
+  EmptyList))))

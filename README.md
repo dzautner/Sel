@@ -25,7 +25,7 @@ With the application working the same as in any lisp dialect:
 (Identity EXP)
 ```
 
-Or in a point free notation:
+Or in a let free notation:
 
 ```scheme
 ((λ x x) EXP)
@@ -109,7 +109,7 @@ By default the compilation target is Javascript with named functions, for exampl
 const Fibonacci = Y((f => (n => T_IF(T_IS_L_THAN_EQ(n)($_1))((_ => n))((_ => T_PLUS(f(T_MINUS(n)($_1)))(f(T_MINUS(n)($_2)))))(T_NULL))));  
 ```  
 
-But Sel also supports compiling to point-free Javascript with the `--compiler=PointFreeJavaScript` flag, which though much less readable looks much more aesthetic and appropriate for a Lambda calculus compilation target:  
+But Sel also supports compiling to let-free Javascript with the `--compiler=LetFreeJavaScript` flag, which though much less readable looks much more aesthetic and appropriate for a Lambda calculus compilation target:  
 
 ```javascript  
  (f => (x => f((y => x(x)(y))))(x => f((y => x(x)(y)))))((f => (n => (c => (t => (f => c(t)(f))))((m => (n => (n => n((_ => (t => (f => f))))((t => (f => t))))((m => (n => n((n => (f => (x => n((g => (h => h(g(f)))))((_ => x))((u => u))))))(m)))(m)(n))))(n)((n => (f => (x => f(n(f)(x)))))((f => (x => x)))))((_ => n))((_ => (m => (n => n((n => (f => (x => f(n(f)(x))))))(m)))(f((m => (n => n((n => (f => (x => n((g => (h => h(g(f)))))((_ => x))((u => u))))))(m)))(n)((n => (f => (x => f(n(f)(x)))))((f => (x => x))))))(f((m => (n => n((n => (f => (x => n((g => (h => h(g(f)))))((_ => x))((u => u))))))(m)))(n)((n => (f => (x => f(n(f)(x)))))((n => (f => (x => f(n(f)(x)))))((f => (x => x)))))))))((x => (t => (f => t)))))))((n => (f => (x => f(n(f)(x)))))((n => (f => (x => f(n(f)(x)))))((n => (f => (x => f(n(f)(x)))))((n => (f => (x => f(n(f)(x)))))((n => (f => (x => f(n(f)(x)))))((n => (f => (x => f(n(f)(x)))))((n => (f => (x => f(n(f)(x)))))((n => (f => (x => f(n(f)(x)))))((n => (f => (x => f(n(f)(x)))))((n => (f => (x => f(n(f)(x)))))((f => (x => x)))))))))))))  

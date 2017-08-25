@@ -28,7 +28,7 @@ const getCompiler = tokenHandlers => {
       node.children.length === 0 && (0, _errors.throwEmptyListError)();
       if (isApplication(node)) {
         node.children.length < 2 && (0, _errors.throwEmptyApplicationError)();
-        return tokenHandlers.LAMBDA_APPLICATION(buildLambdaApplicationNode(...node.children), Compile);
+        return tokenHandlers.LAMBDA_APPLICATION(buildLambdaApplicationNode(...node.children), Compile, heap);
       }
       return node.children.map(Compile).join('');
     }
@@ -45,7 +45,7 @@ const JavaScript = getCompiler({
   LIST: (node, compile) => node.children.map(compile).join('')
 });
 
-const PointFreeJavaScript = getCompiler({
+const LetFreeJavaScript = getCompiler({
   PROGRAM: (node, compile) => node.children.map(compile).join(''),
   LAMBDA_DEC: (node, compile) => `(${node.body.input} => ${node.children.map(compile).join('')})`,
   LAMBDA_APPLICATION: (node, compile) => `${compile(node.body.lambda)}(${compile(node.body.argument)})`,
@@ -71,6 +71,6 @@ const ChurchNotation = getCompiler({
 
 exports.default = {
   JavaScript,
-  PointFreeJavaScript,
+  LetFreeJavaScript,
   ChurchNotation
 };

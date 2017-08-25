@@ -61,7 +61,7 @@ const JavaScript = getCompiler({
   LIST:               (node, compile) => node.children.map(compile).join(''),
 });
 
-const PointFreeJavaScript = getCompiler({
+const LetFreeJavaScript = getCompiler({
   PROGRAM:            (node, compile) => node.children.map(compile).join(''),
   LAMBDA_DEC:         (node, compile) => `(${node.body.input} => ${node.children.map(compile).join('')})`,
   LAMBDA_APPLICATION: (node, compile) => `${compile(node.body.lambda)}(${compile(node.body.argument)})`,
@@ -87,6 +87,6 @@ const ChurchNotation = getCompiler({
 
 export default {
   JavaScript,
-  PointFreeJavaScript,
+  LetFreeJavaScript,
   ChurchNotation,
 };
