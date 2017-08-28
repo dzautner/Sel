@@ -5,8 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.compile = undefined;
 
-var _utils = require('./utils.js');
-
 var _lexer = require('./lexer.js');
 
 var _lexer2 = _interopRequireDefault(_lexer);
@@ -25,17 +23,12 @@ const compile = exports.compile = async (raw, compilerName = 'JavaScript') => {
   const compiler = _compilers2.default[compilerName];
   const tokens = (0, _lexer2.default)(raw);
   const tree = (0, _parser2.default)(tokens);
-  const builtins = await (0, _utils.openFile)('../src/builtins.js');
   const code = compiler(tree);
   const churchNotation = _compilers2.default.ChurchNotation(tree);
-  return `
-${builtins}
-
+  return code || `
 /**
 The corresponding code in Church Encoding:
-
 ${churchNotation}
-
 **/
 
 ${code}

@@ -36,8 +36,41 @@ const getCompiler = tokenHandlers => {
   };
 };
 
+const javaScriptBuiltins = `
+const toJSNumber = (number) => {
+  let counter = 0;
+  number(() => counter++)();
+  return counter;
+};
+
+const show = (fn) => { //eslint-disable-line
+  if (fn.name) {
+    console.log(fn.name);
+    return;
+  }
+  console.log(toJSNumber(fn));
+};
+
+`;
+
+const pythonBuiltins = `
+class Counter():
+  c = 0
+  def inc(self, _):
+    self.c += 1
+
+def toPythonNumber(number):
+  counter = Counter()
+  number(counter.inc)(0)
+  return counter.c
+
+def show(fn):
+  print(toPythonNumber(fn))
+
+`;
+
 const JavaScript = getCompiler({
-  PROGRAM: (node, compile) => node.children.map(compile).join(';\n') + ';',
+  PROGRAM: (node, compile) => javaScriptBuiltins + node.children.map(compile).join(';\n') + ';',
   VAR_DEC: (node, compile) => `const ${node.body.name} = ${node.children.map(compile).join('')}`,
   LAMBDA_DEC: (node, compile) => `(${node.body.input} => ${node.children.map(compile).join('')})`,
   LAMBDA_APPLICATION: (node, compile) => `${compile(node.body.lambda)}(${compile(node.body.argument)})`,
@@ -46,7 +79,7 @@ const JavaScript = getCompiler({
 });
 
 const LetFreeJavaScript = getCompiler({
-  PROGRAM: (node, compile) => node.children.map(compile).join(''),
+  PROGRAM: (node, compile) => javaScriptBuiltins + node.children.map(compile).join(''),
   LAMBDA_DEC: (node, compile) => `(${node.body.input} => ${node.children.map(compile).join('')})`,
   LAMBDA_APPLICATION: (node, compile) => `${compile(node.body.lambda)}(${compile(node.body.argument)})`,
   ATOM: (node, compile, heap) => heap[node.body.name] || node.body.name,
@@ -69,8 +102,21 @@ const ChurchNotation = getCompiler({
   }
 });
 
+const Python = getCompiler({
+  PROGRAM: (node, compile) => pythonBuiltins + node.children.map(compile).join(''),
+  LAMBDA_DEC: (node, compile) => `(lambda ${node.body.input}: ${node.children.map(compile).join('')})`,
+  LAMBDA_APPLICATION: (node, compile) => `(${compile(node.body.lambda)})(${compile(node.body.argument)})`,
+  ATOM: (node, compile, heap) => heap[node.body.name] || node.body.name,
+  LIST: (node, compile) => node.children.map(compile).join(''),
+  VAR_DEC: (node, compile, heap) => {
+    heap[node.body.name] = node.children.map(compile).join('');
+    return '';
+  }
+});
+
 exports.default = {
   JavaScript,
   LetFreeJavaScript,
-  ChurchNotation
+  ChurchNotation,
+  Python
 };
