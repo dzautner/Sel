@@ -52,8 +52,25 @@ const getCompiler = (tokenHandlers: TokenHandlers): Compiler => {
 
 };
 
+const javaScriptBuiltins = `
+const toJSNumber = (number) => {
+  let counter = 0;
+  number(() => counter++)();
+  return counter;
+};
+
+const show = (fn) => { //eslint-disable-line
+  if (fn.name) {
+    console.log(fn.name);
+    return;
+  }
+  console.log(toJSNumber(fn));
+};
+
+`;
+
 const JavaScript = getCompiler({
-  PROGRAM:            (node, compile) => node.children.map(compile).join(';\n') + ';',
+  PROGRAM:            (node, compile) => javaScriptBuiltins + node.children.map(compile).join(';\n') + ';',
   VAR_DEC:            (node, compile) => `const ${node.body.name} = ${node.children.map(compile).join('')}`,
   LAMBDA_DEC:         (node, compile) => `(${node.body.input} => ${node.children.map(compile).join('')})`,
   LAMBDA_APPLICATION: (node, compile) => `${compile(node.body.lambda)}(${compile(node.body.argument)})`,
@@ -62,7 +79,7 @@ const JavaScript = getCompiler({
 });
 
 const LetFreeJavaScript = getCompiler({
-  PROGRAM:            (node, compile) => node.children.map(compile).join(''),
+  PROGRAM:            (node, compile) => javaScriptBuiltins + node.children.map(compile).join(''),
   LAMBDA_DEC:         (node, compile) => `(${node.body.input} => ${node.children.map(compile).join('')})`,
   LAMBDA_APPLICATION: (node, compile) => `${compile(node.body.lambda)}(${compile(node.body.argument)})`,
   ATOM:               (node, compile, heap) => heap[node.body.name] || node.body.name,
