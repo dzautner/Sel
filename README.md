@@ -148,3 +148,114 @@ https://en.wikipedia.org/wiki/Church_encoding
 
 The Javascript version of different functions was often more readable when encoded to Javascript:
 https://github.com/gtramontina/lambda  
+
+
+
+# Notes on Lambda Calculus and Sel's implementation:
+
+## Boolean Logic
+
+The most basic formal system we can probably implement using nothing but Lambda expressions is Boolean logic.
+
+Introducing new terms "True" and "False" to our system, we want to be able to negate them (True -> False, False -> True),
+And the ability to condition them (Or, And, If).
+
+* And, (Logical symbol ∧). Defined as an operation that takes two Boolean values and returns True if both of the values are True.
+
+```
+p     q     output
+
+T     T     T
+T     F     F
+F     T     F
+F     F     F
+```
+
+
+* Or, (Logical symbol ∨). Defined as an operation that takes two Boolean values and returns True if any of the values are True.
+
+```
+p     q     output
+
+T     T     T
+T     F     T
+F     T     T
+F     F     F
+```
+
+* Negation, (Logical symbol ¬). Defined as an operation that takes a Boolean value and returns the opposite.
+  
+```
+True -> False
+False -> True
+```
+
+When facing these constraints on the operators, one might be surprised to see how tiny the implementation can be using nothing but lambda expressions.
+The difficult part is to decided how to define True and False using Lambda terms to begin with in a way that would allow us to easily implement the above operators.
+
+As it turns out, the answer is that if we define True as a function that returns it's first argument, and False as a function that returns the second argument, the rest is quite trivial to reason about.
+
+
+## Implementation of Boolean operators 
+### And
+
+For the "And" function, that accepts boolean P and Q, we will call the first parameter with it self and the other parameter. In Sel:
+
+```scheme
+((p q) p)
+```
+
+If "p" is True, in our definition, it will return the first parameter passed to it, in which case: "q".
+
+if "p" is false, it will return the second parameter - itself.
+
+in other words:
+
+if both parameters are True, `((p q) p)` will return True, 
+
+if "p" is False, no matter what the value of "q" is, it will return itself - False.
+
+if "p" is true, but "q" is false, it will return "q" - False.
+
+This definition fits the Truth table we defined for the And operator.
+
+### Or
+
+
+Unsurprisingly, the "Or" implementation is aesthetically symmetrical to the "And" one. In Sel:
+```scheme  
+((p p) q)
+```  
+
+breaking it down:
+
+if "p" is True, it will return the first parameter "p",
+meaning that if "p" is True, the value of "q" doesn't matter and the result will be True.  
+```
+T T -> T
+T F -> T
+```
+
+if "p" is False, but "q" is True, it will still return the second parameter - "q", which is True.
+```
+F T -> T
+```
+
+and if both are False, False would also be returned.
+```
+F F -> F
+```
+Which satisfies our requirements for *Or*.
+
+
+### Negation 
+
+Negation might be the clearest example, as simply applying False and True to the input will give you the result:
+
+```scheme
+((c False) True)
+```
+
+If "c" is False, it will return the second parameter - True, and if it's True it will return the first - False.
+
+
