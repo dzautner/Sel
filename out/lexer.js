@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 
+const BUILTINS_PREFIXER = 'BUILTIN__';
+
 const SymbolMap = {
   COMMENT: '---',
   OPEN_PARA: '(',
@@ -39,7 +41,7 @@ const normalizeName = name => {
   //TODO: move digit cleaning to parser?
   const isDigit = /^\d+$/.test(name);
   if (isDigit) {
-    return `$_${name}`;
+    return `${BUILTINS_PREFIXER}_${name}`;
   }
   switch (name) {
     case '-':
