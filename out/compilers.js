@@ -59,6 +59,9 @@ class Counter():
   def inc(self, _):
     self.c += 1
 
+'''
+Convert Church Numeral to normal python number
+'''
 def toPythonNumber(number):
   counter = Counter()
   number(counter.inc)(0)
@@ -66,6 +69,10 @@ def toPythonNumber(number):
 
 def show(fn):
   print(toPythonNumber(fn))
+
+
+# Compiled:
+
 
 `;
 
