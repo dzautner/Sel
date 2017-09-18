@@ -24,13 +24,5 @@ const compile = exports.compile = async (raw, compilerName = 'JavaScript') => {
   const tokens = (0, _lexer2.default)(raw);
   const tree = (0, _parser2.default)(tokens);
   const code = compiler(tree);
-  const churchNotation = _compilers2.default.ChurchNotation(tree);
-  return code || `
-/**
-The corresponding code in Church Encoding:
-${churchNotation}
-**/
-
-${code}
-  `;
+  return code;
 };

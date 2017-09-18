@@ -31,11 +31,11 @@ const pathToJSCode = async (path, options) => {
   }
 };
 
-_commander2.default.command('compile [path]').description('Compile the given SEL file to Javascript').alias('c').option('-rb, --remove-base', 'Set to true to remove base SEL lib').option('-co, --compiler [type]', 'Select which compiler to use ([JavaScript]/LetFreeJavaScript)', 'JavaScript').action(async (path, options) => {
+_commander2.default.command('compile [path]').description('Compile the given SEL file to Javascript').alias('c').option('-rb, --remove-base', 'Set to true to remove base SEL lib').option('-co, --compiler [type]', 'Select which compiler to use ([JavaScript]/LetFreeJavaScript/Python)', 'JavaScript').action(async (path, options) => {
   console.log((await pathToJSCode(path, options)));
 });
 
-_commander2.default.command('run [path]').description('Compile the given SEL file to Javascript and eval it').alias('r').option('-rb, --remove-base', 'Set to true to remove base SEL lib').option('-co, --compiler [type]', 'Select which compiler to use ([JavaScript]/LetFreeJavaScript)', 'JavaScript').action(async (path, options) => {
+_commander2.default.command('run [path]').description('Compile the given SEL file to Javascript and eval it').alias('r').option('-rb, --remove-base', 'Set to true to remove base SEL lib').option('-co, --compiler [type]', 'Select which compiler to use ([JavaScript]/LetFreeJavaScript/Python)', 'JavaScript').action(async (path, options) => {
   eval((await pathToJSCode(path, options))); //eslint-disable-line
 });
 
