@@ -485,6 +485,18 @@ describe.only('Integers', () => {
       expect(await run(`(toJSInteger (IntegerSuccessor ((Integer Negative) 5)))`)).to.equal(-4);
     })
   })
+
+  describe('IntegerPredecessor', async () => {
+    it('should decrease the absolute value of a positive integer by 1', async () => {
+      expect(await run(`(toJSInteger (IntegerPredecessor ((Integer Positive) 2)))`)).to.equal(1);
+    })
+    it('should increase the decrease value of a 0 by 1', async () => {
+      expect(await run(`(toJSInteger (IntegerPredecessor ((Integer Positive) 0)))`)).to.equal(-1);
+    })
+    it('should increase the absolute value of a negative integer by 1', async () => {
+      expect(await run(`(toJSInteger (IntegerPredecessor ((Integer Negative) 5)))`)).to.equal(-6);
+    })
+  })
   })
 
 })
