@@ -655,4 +655,39 @@ describe.only('Integers', () => {
     })
   })
 
+  describe('IntegerMultiplication', () => {
+
+    it('Correctly multiplies two positive integers', async () => {
+      expect(await run(`
+          (let int1 ((Integer Positive) 2))
+          (let int2 ((Integer Positive) 5))
+          (toJSInteger ((IntegerMultiplication int1) int2))
+      `)).to.equal(10);
+    })
+
+    it('Correctly multiplies two negative integers', async () => {
+      expect(await run(`
+          (let int1 ((Integer Negative) 7))
+          (let int2 ((Integer Negative) 3))
+          (toJSInteger ((IntegerMultiplication int1) int2))
+      `)).to.equal(21);
+    })
+
+    it('Correctly multiplies a positive number with a negative number', async () => {
+      expect(await run(`
+          (let int1 ((Integer Negative) 2))
+          (let int2 ((Integer Positive) 4))
+          (toJSInteger ((IntegerMultiplication int1) int2))
+      `)).to.equal(-8);
+    })
+
+    it('Correctly multiplies a negative number with a positive number', async () => {
+      expect(await run(`
+          (let int1 ((Integer Positive) 3))
+          (let int2 ((Integer Negative) 4))
+          (toJSInteger ((IntegerMultiplication int1) int2))
+      `)).to.equal(-12);
+    })
+
+  })
 })

@@ -120,3 +120,8 @@ Signed Integers
         Positive))
 )))
 
+(let IntegerMultiplication (λ m (λ n
+    ((Integer 
+        ((IntegerMultipicationSign m) n))
+    ((* (Integer-To-Real m)) (Integer-To-Real n)))
+)))
