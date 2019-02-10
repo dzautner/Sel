@@ -74,3 +74,14 @@
    (λ _ acc))
    ∅))))
   EmptyList))))
+
+---
+Signed Integers
+---
+
+(let Positive True)
+(let Negative False)
+(let Integer ((λ sign (λ number ((Pair sign) number)))))
+(let Integer-To-Sign (λ int (Left Int)))
+(let Integer-To-Real (λ int (Right int)))
+(let Is-Positive (λ int (Left int)))
