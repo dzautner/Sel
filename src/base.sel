@@ -85,3 +85,11 @@ Signed Integers
 (let Integer-To-Sign (λ int (Left Int)))
 (let Integer-To-Real (λ int (Right int)))
 (let Is-Positive (λ int (Left int)))
+
+(let IntegerSuccessor (λ n
+    (((Is-Zero (Integer-To-Real n)) 
+        ((Integer Positive) 1))
+        (((Is-Positive n) ((Integer Positive) (Successor (Integer-To-Real n))))
+                          ((Integer Negative) (Predecessor (Integer-To-Real n))))))
+))
+
