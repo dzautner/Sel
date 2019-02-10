@@ -497,6 +497,67 @@ describe.only('Integers', () => {
       expect(await run(`(toJSInteger (IntegerPredecessor ((Integer Negative) 5)))`)).to.equal(-6);
     })
   })
+
+  describe('IntegerAddition', async () => {
+    
+    it('should correctly add two positive integers', async () => {
+      expect(await run(`
+          (let int1 ((Integer Positive) 2))
+          (let int2 ((Integer Positive) 5))
+          (toJSInteger ((IntegerAddition int1) int2))
+      `)).to.equal(7);
+    })
+
+    it('should correctly add two negative integers', async () => {
+      expect(await run(`
+          (let int1 ((Integer Negative) 3))
+          (let int2 ((Integer Negative) 2))
+          (toJSInteger ((IntegerAddition int1) int2))
+      `)).to.equal(-5);
+      
+      expect(await run(`
+          (let int1 ((Integer Negative) 8))
+          (let int2 ((Integer Negative) 1))
+          (toJSInteger ((IntegerAddition int1) int2))
+      `)).to.equal(-9);
+    })
+
+    it('should correctly add negative and positive integers', async () => {
+      expect(await run(`
+          (let int1 ((Integer Positive) 3))
+          (let int2 ((Integer Negative) 7))
+          (toJSInteger ((IntegerAddition int1) int2))
+      `)).to.equal(-4);
+      expect(await run(`
+          (let int1 ((Integer Negative) 2))
+          (let int2 ((Integer Positive) 8))
+          (toJSInteger ((IntegerAddition int1) int2))
+      `)).to.equal(6);
+    })
+
+    it('should handle zeros correctly', async () => {
+      expect(await run(`
+          (let int1 ((Integer Negative) 0))
+          (let int2 ((Integer Positive) 0))
+          (toJSInteger ((IntegerAddition int1) int2))
+      `)).to.equal(0);
+
+      expect(await run(`
+          (let int1 ((Integer Negative) 0))
+          (let int2 ((Integer Positive) 5))
+          (toJSInteger ((IntegerAddition int1) int2))
+      `)).to.equal(5);
+
+      expect(await run(`
+          (let int1 ((Integer Positive) 0))
+          (let int2 ((Integer Negative) 5))
+          (toJSInteger ((IntegerAddition int1) int2))
+      `)).to.equal(-5);
+    })
+
+    
+  })
+
   })
 
 })
