@@ -100,14 +100,14 @@ Signed Integers
                           ((Integer Negative) (Successor (Integer-To-Real n))))))
 ))
 
-(let IntegerAddition     (λ m (λ n (((Integer-To-Real n)
+(let IntegerAddition      (λ m (λ n (((Integer-To-Real n)
                             (((Is-Positive n) 
                                 IntegerSuccessor)
                                 IntegerPredecessor))
                             m))))
 
-(let IntegerSubstraction     (λ m (λ n (((Integer-To-Real n)
+(let IntegerSubstraction  (λ m (λ n (((Integer-To-Real n)
                             (((Is-Positive n) 
                                 IntegerPredecessor)
                                 IntegerSuccessor))
-                            m))))   
+                            m))))
