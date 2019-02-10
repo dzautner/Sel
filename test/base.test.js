@@ -616,4 +616,43 @@ describe.only('Integers', () => {
     })
   })
 
+  describe('IntegerMultipicationSign', () => {
+
+    it('should return Positive for two Positives', async () => {
+      const res = await run(`
+        (let int1 ((Integer Positive) 1))
+        (let int2 ((Integer Positive) 1))
+        ((IntegerMultipicationSign int1) int2))
+      `)
+      expect(res.name).to.equal(TruthSymbol)
+    })
+
+    it('should return Positive for two Negatives', async () => {
+      const res = await run(`
+        (let int1 ((Integer Negative) 1))
+        (let int2 ((Integer Negative) 1))
+        ((IntegerMultipicationSign int1) int2))
+      `)
+      expect(res.name).to.equal(TruthSymbol)
+    })
+
+    it('should return Negative for two one Positive and Negative mix', async () => {
+      const res = await run(`
+        (let int1 ((Integer Positive) 1))
+        (let int2 ((Integer Negative) 1))
+        ((IntegerMultipicationSign int1) int2))
+      `)
+      expect(res.name).to.equal(FalseSymbol)
+    })
+
+    it('should return Negative for two one Negative and Positive mix', async () => {
+      const res = await run(`
+        (let int1 ((Integer Negative) 1))
+        (let int2 ((Integer Positive) 1))
+        ((IntegerMultipicationSign int1) int2))
+      `)
+      expect(res.name).to.equal(FalseSymbol)
+    })
+  })
+
 })
