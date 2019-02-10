@@ -106,3 +106,8 @@ Signed Integers
                                 IntegerPredecessor))
                             m))))
 
+(let IntegerSubstraction     (λ m (λ n (((Integer-To-Real n)
+                            (((Is-Positive n) 
+                                IntegerPredecessor)
+                                IntegerSuccessor))
+                            m))))   

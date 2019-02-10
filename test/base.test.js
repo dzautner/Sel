@@ -558,6 +558,62 @@ describe.only('Integers', () => {
     
   })
 
+  describe('IntegerSubstraction', async () => {
+    
+    it('should correctly substract two positive integers', async () => {
+      expect(await run(`
+          (let int1 ((Integer Positive) 2))
+          (let int2 ((Integer Positive) 5))
+          (toJSInteger ((IntegerSubstraction int1) int2))
+      `)).to.equal(-3);
+    })
+
+    it('should correctly substract two negative integers', async () => {
+      expect(await run(`
+          (let int1 ((Integer Negative) 3))
+          (let int2 ((Integer Negative) 2))
+          (toJSInteger ((IntegerSubstraction int1) int2))
+      `)).to.equal(-1);
+      
+      expect(await run(`
+          (let int1 ((Integer Negative) 8))
+          (let int2 ((Integer Negative) 1))
+          (toJSInteger ((IntegerSubstraction int1) int2))
+      `)).to.equal(-7);
+    })
+
+    it('should correctly substract negative and positive integers', async () => {
+      expect(await run(`
+          (let int1 ((Integer Positive) 3))
+          (let int2 ((Integer Negative) 7))
+          (toJSInteger ((IntegerSubstraction int1) int2))
+      `)).to.equal(10);
+      expect(await run(`
+          (let int1 ((Integer Negative) 2))
+          (let int2 ((Integer Positive) 8))
+          (toJSInteger ((IntegerSubstraction int1) int2))
+      `)).to.equal(-10);
+    })
+
+    it('should handle zeros correctly', async () => {
+      expect(await run(`
+          (let int1 ((Integer Negative) 0))
+          (let int2 ((Integer Positive) 0))
+          (toJSInteger ((IntegerSubstraction int1) int2))
+      `)).to.equal(0);
+
+      expect(await run(`
+          (let int1 ((Integer Negative) 0))
+          (let int2 ((Integer Positive) 5))
+          (toJSInteger ((IntegerSubstraction int1) int2))
+      `)).to.equal(-5);
+
+      expect(await run(`
+          (let int1 ((Integer Positive) 0))
+          (let int2 ((Integer Negative) 5))
+          (toJSInteger ((IntegerSubstraction int1) int2))
+      `)).to.equal(5);
+    })
   })
 
 })
