@@ -112,6 +112,7 @@ Signed Integers
                                 IntegerPredecessor)
                                 IntegerSuccessor))
                             m))))
+
 (let IntegerMultipicationSign (λ m (λ n
     ((((∧ (Is-Negative n)) (Is-Negative m))
         Positive)
@@ -125,3 +126,4 @@ Signed Integers
         ((IntegerMultipicationSign m) n))
     ((* (Integer-To-Real m)) (Integer-To-Real n)))
 )))
+
