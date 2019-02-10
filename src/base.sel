@@ -1,7 +1,7 @@
 (let Identity        (λ x x))
 
 (let Successor       (λ n (λ f (λ x (f ((n f) x))))))
-(let Predecessor     (λ n (λ f (λ x (((n (λ g (λ h (h (g f))))) (λ _ x)) (λ u u))))))
+(let Predecessor     (λ n (((Is-Zero n) 0) (λ f (λ x (((n (λ g (λ h (h (g f))))) (λ _ x)) (λ u u)))))))
 (let +               (λ m (λ n ((n Successor) m))))
 (let -               (λ m (λ n ((n Predecessor) m))))
 (let *               (λ m (λ n (λ f (m (n f))))))
