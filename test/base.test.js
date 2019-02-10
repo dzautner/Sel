@@ -453,3 +453,27 @@ describe('List', () => {
     });
   })
 });
+
+
+
+describe.only('Integers', () => {
+  it('Should construct an integer with a sign and a real number', async () => {
+    expect(await run(`(toJSInteger ((Integer Positive) 5))`)).to.equal(5);
+    expect(await run(`(toJSInteger ((Integer Negative) 5))`)).to.equal(-5);
+    expect(await run(`(toJSInteger ((Integer Negative) 10))`)).to.equal(-10);
+  })
+  
+  it('should correctly identify sign of an integer', async () => {
+    expect((await run('(Is-Positive ((Integer Negative) 10))')).name).to.equal(FalseSymbol);
+    expect((await run('(Is-Positive ((Integer Positive) 3))')).name).to.equal(TruthSymbol);
+  })
+
+  it('should correctly convert an integer to a real number', async () => {
+    expect(await run(`(toJSNumber (Integer-To-Real ((Integer Positive) 5)))`)).to.equal(5);
+    expect(await run(`(toJSNumber (Integer-To-Real ((Integer Negative) 5)))`)).to.equal(5);
+    expect(await run(`(toJSNumber (Integer-To-Real ((Integer Negative) 10)))`)).to.equal(10);
+  })
+
+  })
+
+})
