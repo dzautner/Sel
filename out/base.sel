@@ -1,7 +1,7 @@
 (let Identity        (λ x x))
 
 (let Successor       (λ n (λ f (λ x (f ((n f) x))))))
-(let Predecessor     (λ n (λ f (λ x (((n (λ g (λ h (h (g f))))) (λ _ x)) (λ u u))))))
+(let Predecessor     (λ n (((Is-Zero n) 0) (λ f (λ x (((n (λ g (λ h (h (g f))))) (λ _ x)) (λ u u)))))))
 (let +               (λ m (λ n ((n Successor) m))))
 (let -               (λ m (λ n ((n Predecessor) m))))
 (let *               (λ m (λ n (λ f (m (n f))))))
@@ -74,3 +74,40 @@
    (λ _ acc))
    ∅))))
   EmptyList))))
+
+---
+Signed Integers
+---
+
+(let Positive True)
+(let Negative False)
+(let Integer ((λ sign (λ number ((Pair sign) number)))))
+(let Integer-To-Sign (λ int (Left Int)))
+(let Integer-To-Real (λ int (Right int)))
+(let Is-Positive (λ int (Left int)))
+
+(let IntegerSuccessor (λ n
+    (((Is-Zero (Integer-To-Real n)) 
+        ((Integer Positive) 1))
+        (((Is-Positive n) ((Integer Positive) (Successor (Integer-To-Real n))))
+                          ((Integer Negative) (Predecessor (Integer-To-Real n))))))
+))
+
+(let IntegerPredecessor (λ n
+    (((Is-Zero (Integer-To-Real n)) 
+        ((Integer Negative) 1))
+        (((Is-Positive n) ((Integer Positive) (Predecessor (Integer-To-Real n))))
+                          ((Integer Negative) (Successor (Integer-To-Real n))))))
+))
+
+(let IntegerAddition     (λ m (λ n (((Integer-To-Real n)
+                            (((Is-Positive n) 
+                                IntegerSuccessor)
+                                IntegerPredecessor))
+                            m))))
+
+(let IntegerSubstraction     (λ m (λ n (((Integer-To-Real n)
+                            (((Is-Positive n) 
+                                IntegerPredecessor)
+                                IntegerSuccessor))
+                            m))))   
