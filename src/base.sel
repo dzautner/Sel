@@ -144,6 +144,7 @@
 (let Integer-To-Real (λ int (Right int)))
 (let Is-Positive (λ int ((∨ (Is-Zero (Integer-To-Real int))) (Left int))))
 (let Is-Negative (λ int (¬ (Is-Positive int))))
+(let To-Positive (λ int ((Integer Positive) (Right int))))
 
 (let IntegerSuccessor (λ n
             (((Is-Zero (Integer-To-Real n)) 
@@ -199,3 +200,16 @@
         ((IntegerMultipicationSign m) n))
     ((* (Integer-To-Real m)) (Integer-To-Real n))))))
 
+
+-- Works only for two positive integers
+(let IntegerRealValueDivision (Y (λ f (λ x (λ divisor
+  ((((If ((IntegerLTE x) divisor))
+   (λ _ (IntegerSuccessor ((f ((IntegerSubstraction x) divisor)) divisor))))
+   (λ _ ((Integer Positive) 0)))
+   ∅))))))
+
+
+-- Calculate the sign and the real value separetely and return in a new Integer
+(let IntegerDivision (λ n (λ m 
+    ((Integer ((IntegerMultipicationSign n) m)) -- Same sign product rules apply for division as for multiplication
+               (Integer-To-Real ((IntegerRealValueDivision (To-Positive n)) (To-Positive m)))))))

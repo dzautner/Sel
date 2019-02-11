@@ -775,4 +775,49 @@ describe('Integers', () => {
     })
 
   })
+
+  describe('IntegerDivision', () => { 
+    it('Correctly divides two positives numbers #1', async () => {
+      expect(await run(`
+          (let int1 ((Integer Positive) 10))
+          (let int2 ((Integer Positive) 2))
+          (toJSInteger ((IntegerDivision int1) int2))
+      `)).to.equal(5);
+    })
+    
+    it('Correctly divides two positives numbers #2', async () => {
+      expect(await run(`
+          (let int1 ((Integer Positive) 6))
+          (let int2 ((Integer Positive) 2))
+          (toJSInteger ((IntegerDivision int1) int2))
+      `)).to.equal(3);
+    })
+
+    it('Correctly divides two negative numbers', async () => {
+      expect(await run(`
+          (let int1 ((Integer Negative) 6))
+          (let int2 ((Integer Negative) 3))
+          (toJSInteger ((IntegerDivision int1) int2))
+      `)).to.equal(2);
+    })
+
+    it('Correctly divides a negative with a positive number', async () => {
+      expect(await run(`
+          (let int1 ((Integer Negative) 6))
+          (let int2 ((Integer Positive) 3))
+          (toJSInteger ((IntegerDivision int1) int2))
+      `)).to.equal(-2);
+    })
+
+    it('Correctly divides a positive with a negative number', async () => {
+      expect(await run(`
+          (let int1 ((Integer Positive) 9))
+          (let int2 ((Integer Negative) 3))
+          (toJSInteger ((IntegerDivision int1) int2))
+      `)).to.equal(-3);
+    })
+
+
+  })
 })
+
