@@ -1,5 +1,15 @@
 (let Identity        (λ x x))
 
+(let True            (λ t (λ f t)))
+(let False           (λ t (λ f f)))
+(let ∧               (λ p (λ q ((p q) p))))
+(let ∨               (λ p (λ q ((p p) q))))
+(let ¬               (λ c ((c False) True)))
+(let If              (λ c (λ t (λ f ((c t) f)))))
+
+(let 0               (λ f Identity))
+(let Is-Zero         (λ n ((n (λ _ False)) True)))
+
 (let Successor       (λ n (λ f (λ x (f ((n f) x))))))
 (let Predecessor     (λ n (((Is-Zero n) 0) (λ f (λ x (((n (λ g (λ h (h (g f))))) (λ _ x)) (λ u u)))))))
 (let +               (λ m (λ n ((n Successor) m))))
@@ -8,14 +18,6 @@
 (let Power           (λ x (λ y (y x))))
 (let Abs-Difference  (λ x (λ y ((+ ((- x) y)) ((- y) x)))))
 
-(let True            (λ t (λ f t)))
-(let False           (λ t (λ f f)))
-(let ∧               (λ p (λ q ((p q) p))))
-(let ∨               (λ p (λ q ((p p) q))))
-(let ¬               (λ c ((c False) True)))
-(let If              (λ c (λ t (λ f ((c t) f)))))
-
-(let Is-Zero         (λ n ((n (λ _ False)) True)))
 (let <               (λ m (λ n (¬ ((≤ n) m)))))
 (let ≤               (λ m (λ n (Is-Zero ((- m) n)))))
 (let =               (λ m (λ n ((∧ ((≤ m) n)) ((≤ n) m)))))
@@ -25,7 +27,6 @@
 (let ∅               (λ x True))
 (let Is-Null (λ l (λ h (True (λ d False)))))
 
-(let 0               (λ f Identity))
 (let 1               (Successor 0))
 (let 2               (Successor 1))
 (let 3               (Successor 2))
