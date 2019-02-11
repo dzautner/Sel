@@ -6,6 +6,16 @@ Object.defineProperty(exports, "__esModule", {
 
 var _errors = require('./errors');
 
+var _fs = require('fs');
+
+var _fs2 = _interopRequireDefault(_fs);
+
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 const firstChildType = node => node.children[0].body.type;
 
 const isApplication = node => firstChildType(node) !== 'VAR_DEC' && firstChildType(node) !== 'LAMBDA_DEC';
@@ -36,55 +46,9 @@ const getCompiler = tokenHandlers => {
   };
 };
 
-const javaScriptBuiltins = `
-const toJSNumber = (number) => {
-  let counter = 0;
-  number(() => counter++)();
-  return counter;
-};
+const javaScriptBuiltins = _fs2.default.readFileSync(_path2.default.resolve(__dirname, './builtins.js')) + '\n';
 
-const show = (fn) => { //eslint-disable-line
-  if (fn.name) {
-    console.log(fn.name);
-    return;
-  }
-  console.log(toJSNumber(fn));
-};
-
-const toJSInteger = (fn) => { //eslint-disable-line
-  let sign, number;
-  fn(s => n => {
-    sign = s(() => sign = 1)(() => sign = -1)();
-    number = toJSNumber(n);
-  });
-  return sign * number;
-};
-
-const showInteger = fn => console.log(toJSInteger(fn))
-`;
-
-const pythonBuiltins = `
-class Counter():
-  c = 0
-  def inc(self, _):
-    self.c += 1
-
-'''
-Convert Church Numeral to normal python number
-'''
-def toPythonNumber(number):
-  counter = Counter()
-  number(counter.inc)(0)
-  return counter.c
-
-def show(fn):
-  print(toPythonNumber(fn))
-
-
-# Compiled:
-
-
-`;
+const pythonBuiltins = _fs2.default.readFileSync(_path2.default.resolve(__dirname, './builtins.py')) + '\n';
 
 const JavaScript = getCompiler({
   PROGRAM: (node, compile) => javaScriptBuiltins + node.children.map(compile).join(';\n') + ';',

@@ -1,7 +1,6 @@
 "use strict";
 
 // Built in functions:
-
 const toJSNumber = number => {
   let counter = 0;
   number(() => counter++)();
@@ -9,7 +8,6 @@ const toJSNumber = number => {
 };
 
 const show = fn => {
-  //eslint-disable-line
   if (fn.name) {
     console.log(fn.name);
     return;
@@ -17,14 +15,17 @@ const show = fn => {
   console.log(toJSNumber(fn));
 };
 
-const showInteger = fn => {
-  //eslint-disable-line
+const toJSInteger = fn => {
   let sign, number;
   fn(s => n => {
     sign = s(() => sign = 1)(() => sign = -1)();
     number = toJSNumber(n);
   });
-  console.log(sign * number);
+  return sign * number;
+};
+
+const showInteger = fn => {
+  console.log(toJSInteger(fn));
 };
 
 // End of built in functions.

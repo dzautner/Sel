@@ -8,7 +8,7 @@ Object.defineProperty(exports, "__esModule", {
 const BUILTINS_PREFIXER = 'BUILTIN__';
 
 const SymbolMap = {
-  COMMENT: '---',
+  COMMENT: '--',
   OPEN_PARA: '(',
   CLOSE_PARA: ')',
   LAMBDA_DEC: 'λ',
@@ -29,7 +29,7 @@ const split = raw => raw.split(' ');
 
 const removeComments = text => {
   const S = SymbolMap.COMMENT;
-  const commentRegex = new RegExp(S + '[\\s\\S]*?' + S, 'g');
+  const commentRegex = new RegExp(S + '[\\s\\S]*?' + '\n', 'g');
   return text.replace(commentRegex, '');
 };
 
@@ -76,6 +76,8 @@ const normalizeName = name => {
       return 'T_IS_G_THAN';
     case '≥':
       return 'T_IS_G_THAN_EQ';
+    case ' ∈ ':
+      return '_IN_SET_';
     default:
       return name.replace(/\-/g, '_');
   }

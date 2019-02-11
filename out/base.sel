@@ -1,4 +1,27 @@
+
+-----------------------------------------------------
+-- Let there be light! 
+-- https://en.wikipedia.org/wiki/Identity_function
+-----------------------------------------------------
 (let Identity        (λ x x))
+
+-------------------
+-- Boolean Logic --
+-------------------
+(let True            (λ t (λ f t)))
+(let False           (λ t (λ f f)))
+(let ∧               (λ p (λ q ((p q) p))))
+(let ∨               (λ p (λ q ((p p) q))))
+(let ¬               (λ c ((c False) True)))
+(let If              (λ c (λ t (λ f ((c t) f)))))
+
+-----------------------------------------------------
+-- Real Numbers & Numerical Operations with Church Numerals
+-- See: https://en.wikipedia.org/wiki/Church_encoding#Church_numerals
+-----------------------------------------------------
+
+(let 0               (λ f Identity))
+(let Is-Zero         (λ n ((n (λ _ False)) True)))
 
 (let Successor       (λ n (λ f (λ x (f ((n f) x))))))
 (let Predecessor     (λ n (((Is-Zero n) 0) (λ f (λ x (((n (λ g (λ h (h (g f))))) (λ _ x)) (λ u u)))))))
@@ -8,14 +31,6 @@
 (let Power           (λ x (λ y (y x))))
 (let Abs-Difference  (λ x (λ y ((+ ((- x) y)) ((- y) x)))))
 
-(let True            (λ t (λ f t)))
-(let False           (λ t (λ f f)))
-(let ∧               (λ p (λ q ((p q) p))))
-(let ∨               (λ p (λ q ((p p) q))))
-(let ¬               (λ c ((c False) True)))
-(let If              (λ c (λ t (λ f ((c t) f)))))
-
-(let Is-Zero         (λ n ((n (λ _ False)) True)))
 (let <               (λ m (λ n (¬ ((≤ n) m)))))
 (let ≤               (λ m (λ n (Is-Zero ((- m) n)))))
 (let =               (λ m (λ n ((∧ ((≤ m) n)) ((≤ n) m)))))
@@ -23,9 +38,8 @@
 (let >               (λ m (λ n (¬ ((≤ m) n)))))
 (let ≥               (λ m (λ n ((≤ n) m))))
 (let ∅               (λ x True))
-(let Is-Null (λ l (λ h (True (λ d False)))))
+(let Is-Null         (λ l (λ h (True (λ d False)))))
 
-(let 0               (λ f Identity))
 (let 1               (Successor 0))
 (let 2               (Successor 1))
 (let 3               (Successor 2))
@@ -75,9 +89,9 @@
    ∅))))
   EmptyList))))
 
----
-Signed Integers
----
+---------------------
+-- Signed Integers --
+---------------------
 
 (let Positive True)
 (let Negative False)
@@ -85,6 +99,7 @@ Signed Integers
 (let Integer-To-Sign (λ int (Left Int)))
 (let Integer-To-Real (λ int (Right int)))
 (let Is-Positive (λ int (Left int)))
+(let Is-Negative (λ int (¬ (Is-Positive int))))
 
 (let IntegerSuccessor (λ n
     (((Is-Zero (Integer-To-Real n)) 
@@ -100,14 +115,29 @@ Signed Integers
                           ((Integer Negative) (Successor (Integer-To-Real n))))))
 ))
 
-(let IntegerAddition     (λ m (λ n (((Integer-To-Real n)
+(let IntegerAddition      (λ m (λ n (((Integer-To-Real n)
                             (((Is-Positive n) 
                                 IntegerSuccessor)
                                 IntegerPredecessor))
                             m))))
 
-(let IntegerSubstraction     (λ m (λ n (((Integer-To-Real n)
+(let IntegerSubstraction  (λ m (λ n (((Integer-To-Real n)
                             (((Is-Positive n) 
                                 IntegerPredecessor)
                                 IntegerSuccessor))
-                            m))))   
+                            m))))
+
+(let IntegerMultipicationSign (λ m (λ n
+    ((((∧ (Is-Negative n)) (Is-Negative m))
+        Positive)
+     ((((∨ (Is-Negative n)) (Is-Negative m))
+        Negative)
+        Positive))
+)))
+
+(let IntegerMultiplication (λ m (λ n
+    ((Integer 
+        ((IntegerMultipicationSign m) n))
+    ((* (Integer-To-Real m)) (Integer-To-Real n)))
+)))
+
