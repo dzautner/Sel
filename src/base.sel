@@ -1,11 +1,24 @@
+
+-----------------------------------------------------
+-- Let there be light! 
+-- https://en.wikipedia.org/wiki/Identity_function
+-----------------------------------------------------
 (let Identity        (λ x x))
 
+-------------------
+-- Boolean Logic --
+-------------------
 (let True            (λ t (λ f t)))
 (let False           (λ t (λ f f)))
 (let ∧               (λ p (λ q ((p q) p))))
 (let ∨               (λ p (λ q ((p p) q))))
 (let ¬               (λ c ((c False) True)))
 (let If              (λ c (λ t (λ f ((c t) f)))))
+
+-----------------------------------------------------
+-- Real Numbers & Numerical Operations with Church Numerals
+-- See: https://en.wikipedia.org/wiki/Church_encoding#Church_numerals
+-----------------------------------------------------
 
 (let 0               (λ f Identity))
 (let Is-Zero         (λ n ((n (λ _ False)) True)))
@@ -25,7 +38,7 @@
 (let >               (λ m (λ n (¬ ((≤ m) n)))))
 (let ≥               (λ m (λ n ((≤ n) m))))
 (let ∅               (λ x True))
-(let Is-Null (λ l (λ h (True (λ d False)))))
+(let Is-Null         (λ l (λ h (True (λ d False)))))
 
 (let 1               (Successor 0))
 (let 2               (Successor 1))
@@ -76,9 +89,9 @@
    ∅))))
   EmptyList))))
 
----
-Signed Integers
----
+---------------------
+-- Signed Integers --
+---------------------
 
 (let Positive True)
 (let Negative False)
