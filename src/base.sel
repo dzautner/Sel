@@ -51,19 +51,58 @@
 (let 9               (Successor 8))
 (let 10              (Successor 9))
 
+
+----
+-- The Y combinator, allowing recrusive definitions without "cheating" by using named functions.
+--
+--  λf· (λx· f (x x)) (λx· f (x x))
+--
+-- "Discovered" (or "Invented", depends on the reader) by Haskell B. Curry,
+-- It truly one of the cuter Sudokus in Lambda Calculus.
+--
+--
+-- Once we are able to use recursion, there is nothing really stopping us from structuring complex algorithms.
+----
 (let Y         (λ f ((λ x (f (λ y ((x x) y)))) (λ x (f (λ y ((x x) y)))))))
 
+
+--- A pair is our first data-structure that can hold arbitary data.
+--- The implementation is quite clear, it simply accepts two values to "pack"
+--- and returns a function that could have a function applied that that would have those two values "unpacked" into.
 (let Pair      (λ x (λ y (λ f ((f x) y)))))
+
+-- Helpers for returning the Left/Right side of the pair
 (let Left      (λ p (p True)))
 (let Right     (λ p (p False)))
 
+--- A Triple has a similar implementation to the Pair, but with 3 values instead.
 (let Triple    (λ x (λ y (λ z (λ f (((f x) y) z))))))
+
+------------------
+-- Linked Lists --
+------------------
+
+--- The List implemenation is simply using the Triple defined before to hold 3 references:
+--- A Value of the current Node
+--- The rest of the List
+--- A flag indicating is the list empty or not.
+---
+--- Note the later is not exactly nessecery as we could have used a Null terminator in the value field
+--- and only use a pair for the implementation, but implementing using a Triple and a flag proved easier. 
 (let List      (λ h (λ t (((Triple h) t) False))))
 (let EmptyList (((Triple 0) 0) True))
+
+--- The head of the list is simple the left most part of the Triple
 (let Head      (λ l (l (λ h (λ t (λ n h))))))
+
+--- The tail is the middle part of the Triple
 (let Tail      (λ l (l (λ h (λ t (λ n t))))))
+
+--- Is-Empty is the flag in the right most part of the Triple.
 (let Is-Empty  (λ l (l (λ h (λ t (λ n n))))))
 
+
+--- A show case of common algorithms using the Linked List implementation above and the Y combinator. 
 (let Nth (Y (λ f (λ l (λ n
   ((((If (Is-Zero n))
    (λ _ (Head l)))
@@ -89,32 +128,40 @@
    ∅))))
   EmptyList))))
 
+
 ---------------------
 -- Signed Integers --
 ---------------------
 
+-- Integer signs:
 (let Positive True)
 (let Negative False)
+
+-- An integer is just a pair of a sign an a real number
 (let Integer ((λ sign (λ number ((Pair sign) number)))))
+
+
+--- Helpers
 (let Integer-To-Sign (λ int (Left Int)))
 (let Integer-To-Real (λ int (Right int)))
 (let Is-Positive (λ int (Left int)))
 (let Is-Negative (λ int (¬ (Is-Positive int))))
 
 (let IntegerSuccessor (λ n
-    (((Is-Zero (Integer-To-Real n)) 
-        ((Integer Positive) 1))
-        (((Is-Positive n) ((Integer Positive) (Successor (Integer-To-Real n))))
-                          ((Integer Negative) (Predecessor (Integer-To-Real n))))))
-))
+            (((Is-Zero (Integer-To-Real n)) 
+                ((Integer Positive) 1))
+                (((Is-Positive n) ((Integer Positive) (Successor (Integer-To-Real n))))
+                                    ((Integer Negative) (Predecessor (Integer-To-Real n)))))))
 
 (let IntegerPredecessor (λ n
-    (((Is-Zero (Integer-To-Real n)) 
-        ((Integer Negative) 1))
-        (((Is-Positive n) ((Integer Positive) (Predecessor (Integer-To-Real n))))
-                          ((Integer Negative) (Successor (Integer-To-Real n))))))
-))
+            (((Is-Zero (Integer-To-Real n)) 
+                ((Integer Negative) 1))
+                (((Is-Positive n) ((Integer Positive) (Predecessor (Integer-To-Real n))))
+                                    ((Integer Negative) (Successor (Integer-To-Real n))))))))
 
+
+
+--- Integer Operations
 (let IntegerAddition      (λ m (λ n (((Integer-To-Real n)
                             (((Is-Positive n) 
                                 IntegerSuccessor)
@@ -127,6 +174,11 @@
                                 IntegerSuccessor))
                             m))))
 
+
+------
+-- A small helper to decide the sign of a product of two Integers.
+------
+
 (let IntegerMultipicationSign (λ m (λ n
     ((((∧ (Is-Negative n)) (Is-Negative m))
         Positive)
@@ -135,6 +187,7 @@
         Positive))
 )))
 
+--- Multiplying Integers is simply a pair of the product of signs and product of reals.
 (let IntegerMultiplication (λ m (λ n
     ((Integer 
         ((IntegerMultipicationSign m) n))
