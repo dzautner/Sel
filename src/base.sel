@@ -1,4 +1,3 @@
-
 -----------------------------------------------------
 -- Let there be light! 
 -- https://en.wikipedia.org/wiki/Identity_function
@@ -59,7 +58,6 @@
 --
 -- "Discovered" (or "Invented", depends on the reader) by Haskell B. Curry,
 -- It truly one of the cuter Sudokus in Lambda Calculus.
---
 --
 -- Once we are able to use recursion, there is nothing really stopping us from structuring complex algorithms.
 ----
