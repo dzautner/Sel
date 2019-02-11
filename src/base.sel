@@ -182,13 +182,11 @@
         Positive)
      ((((∨ (Is-Negative n)) (Is-Negative m))
         Negative)
-        Positive))
-)))
+        Positive)))))
 
 --- Multiplying Integers is simply a pair of the product of signs and product of reals.
 (let IntegerMultiplication (λ m (λ n
     ((Integer 
         ((IntegerMultipicationSign m) n))
-    ((* (Integer-To-Real m)) (Integer-To-Real n)))
-)))
+    ((* (Integer-To-Real m)) (Integer-To-Real n))))))
 
