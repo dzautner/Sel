@@ -39,7 +39,6 @@ program
   .description('Compile the given SEL file to Javascript and eval it')
   .alias('r')
   .option('-rb, --remove-base', 'Set to true to remove base SEL lib')
-  .option('-co, --compiler [type]', 'Select which compiler to use ([JavaScript]/LetFreeJavaScript/Python)', 'JavaScript')
   .action(async (path, options) => {
     eval(await pathToJSCode(path, options)); //eslint-disable-line
   });
