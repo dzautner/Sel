@@ -456,7 +456,7 @@ describe('List', () => {
 
 
 
-describe.only('Integers', () => {
+describe('Integers', () => {
   it('Should construct an integer with a sign and a real number', async () => {
     expect(await run(`(toJSInteger ((Integer Positive) 5))`)).to.equal(5);
     expect(await run(`(toJSInteger ((Integer Negative) 5))`)).to.equal(-5);
