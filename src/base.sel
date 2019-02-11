@@ -142,7 +142,7 @@
 --- Helpers
 (let Integer-To-Sign (λ int (Left Int)))
 (let Integer-To-Real (λ int (Right int)))
-(let Is-Positive (λ int (Left int)))
+(let Is-Positive (λ int ((∨ (Is-Zero (Integer-To-Real int))) (Left int))))
 (let Is-Negative (λ int (¬ (Is-Positive int))))
 
 (let IntegerSuccessor (λ n
