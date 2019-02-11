@@ -5,6 +5,8 @@ import {
   throwEmptyListError,
   throwEmptyApplicationError,
 } from './errors';
+import fs from 'fs';
+import path from 'path';
 
 export type Compiler = (node: ASTNode) => string;
 
@@ -52,56 +54,9 @@ const getCompiler = (tokenHandlers: TokenHandlers): Compiler => {
 
 };
 
-const javaScriptBuiltins = `
-const toJSNumber = (number) => {
-  let counter = 0;
-  number(() => counter++)();
-  return counter;
-};
+const javaScriptBuiltins = fs.readFileSync(path.resolve(__dirname, './builtins.js')) + '\n';
 
-const show = (fn) => { //eslint-disable-line
-  if (fn.name) {
-    console.log(fn.name);
-    return;
-  }
-  console.log(toJSNumber(fn));
-};
-
-const toJSInteger = (fn) => { //eslint-disable-line
-  let sign, number;
-  fn(s => n => {
-    sign = s(() => sign = 1)(() => sign = -1)();
-    number = toJSNumber(n);
-  });
-  return sign * number;
-};
-
-const showInteger = fn => console.log(toJSInteger(fn))
-`;
-
-const pythonBuiltins = `
-class Counter():
-  c = 0
-  def inc(self, _):
-    self.c += 1
-
-'''
-Convert Church Numeral to normal python number
-'''
-def toPythonNumber(number):
-  counter = Counter()
-  number(counter.inc)(0)
-  return counter.c
-
-def show(fn):
-  print(toPythonNumber(fn))
-
-
-# Compiled:
-
-
-`;
-
+const pythonBuiltins =  fs.readFileSync(path.resolve(__dirname, './builtins.py')) + '\n';
 
 const JavaScript = getCompiler({
   PROGRAM:            (node, compile) => javaScriptBuiltins + node.children.map(compile).join(';\n') + ';',

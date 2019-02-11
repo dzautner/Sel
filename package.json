@@ -30,7 +30,7 @@
   },
   "scripts": {
     "clean": "rm out/*",
-    "build": "./node_modules/.bin/babel src/ --out-dir=out && chmod +x out/index.js && cp src/*.sel out/",
+    "build": "./node_modules/.bin/babel src/ --out-dir=out && chmod +x out/index.js && cp src/*.{sel,py} out/",
     "test": "./node_modules/.bin/mocha --compilers js:babel-core/register",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
     "coverage": "./node_modules/.bin/babel-istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-core/register "
