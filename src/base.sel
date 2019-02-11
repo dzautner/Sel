@@ -208,8 +208,15 @@
    (λ _ ((Integer Positive) 0)))
    ∅))))))
 
-
 -- Calculate the sign and the real value separetely and return in a new Integer
 (let IntegerDivision (λ n (λ m 
     ((Integer ((IntegerMultipicationSign n) m)) -- Same sign product rules apply for division as for multiplication
                (Integer-To-Real ((IntegerRealValueDivision (To-Positive n)) (To-Positive m)))))))
+
+-- Only works on positive integers.
+-- If anyone has a good paper to reference me, or even better, explain me like I'm 5 how to calculate remainder of mixed signs in Lambda Calculus, LMK.
+(let IntegerRemainder (Y (λ f (λ x (λ divisor
+  ((((If ((IntegerLTE x) divisor))
+   (λ _ ((f ((IntegerSubstraction x) divisor)) divisor)))
+   (λ _ x))
+   ∅))))))

@@ -816,8 +816,30 @@ describe('Integers', () => {
           (toJSInteger ((IntegerDivision int1) int2))
       `)).to.equal(-3);
     })
+  })
 
-
+  describe('IntegerRemainder', () => {
+    it('should return correctly the Remainder for two positive numbers #1', async () => {
+      expect(await run(`
+          (let int1 ((Integer Positive) 10))
+          (let int2 ((Integer Positive) 3))
+          (toJSInteger ((IntegerRemainder int1) int2))
+      `)).to.equal(1);
+    })
+    it('should return correctly the Remainder for two positive numbers #2', async () => {
+      expect(await run(`
+          (let int1 ((Integer Positive) 7))
+          (let int2 ((Integer Positive) 4))
+          (toJSInteger ((IntegerRemainder int1) int2))
+      `)).to.equal(3);
+    })
+    it('should return correctly the Remainder for two equal positive', async () => {
+      expect(await run(`
+          (let int1 ((Integer Positive) 4))
+          (let int2 ((Integer Positive) 4))
+          (toJSInteger ((IntegerRemainder int1) int2))
+      `)).to.equal(0);
+    })
   })
 })
 
