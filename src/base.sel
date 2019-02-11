@@ -174,13 +174,13 @@
 
 
 (let IntegerLTE (λ n (λ m
-    ((((∧ (Is-Positive n)) (Is-Negative m))
+    ((((∧ (Is-Positive n)) (Is-Negative m)) -- When left is positive the result is always True
         True)
-    ((((∧ (Is-Positive n)) (Is-Positive m))
+    ((((∧ (Is-Positive n)) (Is-Positive m)) -- When both are positive it's ≥ on the real values
         ((≥ (Integer-To-Real n)) (Integer-To-Real m)))
-    ((((∧ (Is-Negative n)) (Is-Negative m))
+    ((((∧ (Is-Negative n)) (Is-Negative m)) -- When both are negative it's ≤ on the real values
         ((≤ (Integer-To-Real n)) (Integer-To-Real m)))
-        False)))
+        False))) -- in any other case (i.e, left is negative and right is positive) the result is false
 )))
 ------
 -- A small helper to decide the sign of a product of two Integers.
