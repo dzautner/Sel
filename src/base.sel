@@ -149,13 +149,13 @@
             (((Is-Zero (Integer-To-Real n)) 
                 ((Integer Positive) 1))
                 (((Is-Positive n) ((Integer Positive) (Successor (Integer-To-Real n))))
-                                    ((Integer Negative) (Predecessor (Integer-To-Real n)))))))
+                                  ((Integer Negative) (Predecessor (Integer-To-Real n)))))))
 
 (let IntegerPredecessor (λ n
             (((Is-Zero (Integer-To-Real n)) 
                 ((Integer Negative) 1))
                 (((Is-Positive n) ((Integer Positive) (Predecessor (Integer-To-Real n))))
-                                    ((Integer Negative) (Successor (Integer-To-Real n))))))))
+                                  ((Integer Negative) (Successor (Integer-To-Real n))))))))
 
 
 
