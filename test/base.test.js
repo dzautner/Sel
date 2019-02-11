@@ -314,15 +314,13 @@ describe('Y-Combinator', () => {
 
 
 describe('Comments', () => {
-  it('should completely remove inline comments', async () => {
-    expect((await run('---AAA--- True ---BBB---')).name).to.equal(TruthSymbol);
-  });
-  it('should completely remove multiline comments', async () => {
+  it('should completely remove comments', async () => {
     expect((await run(`
+      --- I am a comment
+      --- And I am too
       True
-      ---
-      False
-      ---
+      -------- Event in this distance, I am a comment,
+      --- So far is true.
     `)).name).to.equal(TruthSymbol);
   });
 });
