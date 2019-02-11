@@ -173,6 +173,15 @@
                             m))))
 
 
+(let IntegerLTE (λ n (λ m
+    ((((∧ (Is-Positive n)) (Is-Negative m))
+        True)
+    ((((∧ (Is-Positive n)) (Is-Positive m))
+        ((≥ (Integer-To-Real n)) (Integer-To-Real m)))
+    ((((∧ (Is-Negative n)) (Is-Negative m))
+        ((≤ (Integer-To-Real n)) (Integer-To-Real m)))
+        False)))
+)))
 ------
 -- A small helper to decide the sign of a product of two Integers.
 ------

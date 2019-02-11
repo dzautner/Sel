@@ -686,6 +686,93 @@ describe('Integers', () => {
           (toJSInteger ((IntegerMultiplication int1) int2))
       `)).to.equal(-12);
     })
+  })
+  
+  describe('IntegerLTE', () => {
+
+    it('Correctly returns when both integers are positive and left is larger', async () => {
+      const res = await run(`
+        (let int1 ((Integer Positive) 2))
+        (let int2 ((Integer Positive) 1))
+        ((IntegerLTE int1) int2))
+      `)
+      expect(res.name).to.equal(TruthSymbol)
+    })
+
+    it('Correctly returns when both integers are positive and left is smaller', async () => {
+      const res = await run(`
+        (let int1 ((Integer Positive) 4))
+        (let int2 ((Integer Positive) 7))
+        ((IntegerLTE int1) int2))
+      `)
+      expect(res.name).to.equal(FalseSymbol)
+    })
+
+    it('Correctly returns when both integers are positive and equal', async () => {
+      const res = await run(`
+        (let int1 ((Integer Positive) 4))
+        (let int2 ((Integer Positive) 4))
+        ((IntegerLTE int1) int2))
+      `)
+      expect(res.name).to.equal(TruthSymbol)
+    })
+
+    it('Correctly returns when both integers are 0', async () => {
+      const res = await run(`
+        (let int1 ((Integer Positive) 0))
+        (let int2 ((Integer Positive) 0))
+        ((IntegerLTE int1) int2))
+      `)
+      expect(res.name).to.equal(TruthSymbol)
+    })
+
+
+    it('Correctly returns when both integers are negative and left is smaller', async () => {
+      const res1 = await run(`
+        (let int1 ((Integer Negative) 2))
+        (let int2 ((Integer Negative) 1))
+        ((IntegerLTE int1) int2))
+      `)
+      expect(res1.name).to.equal(FalseSymbol)
+    })
+
+    it('Correctly returns when both integers are negative and left is larger', async () => {
+      const res1 = await run(`
+        (let int1 ((Integer Negative) 5))
+        (let int2 ((Integer Negative) 8))
+        ((IntegerLTE int1) int2))
+      `)
+      expect(res1.name).to.equal(TruthSymbol)
+    })
+
+
+    it('Correctly returns when both integers are negative and equal', async () => {
+      const res1 = await run(`
+        (let int1 ((Integer Negative) 5))
+        (let int2 ((Integer Negative) 5))
+        ((IntegerLTE int1) int2))
+      `)
+      expect(res1.name).to.equal(TruthSymbol)
+    })
+
+
+    it('Correctly returns when left int is positive and right one is negative', async () => {
+      const res = await run(`
+        (let int1 ((Integer Positive) 1))
+        (let int2 ((Integer Negative) 1))
+        ((IntegerLTE int1) int2))
+      `)
+      expect(res.name).to.equal(TruthSymbol)
+    })
+
+    it('Correctly returns when left int is negative and right one is positive', async () => {
+      const res = await run(`
+        (let int1 ((Integer Negative) 1))
+        (let int2 ((Integer Positive) 1))
+        ((IntegerLTE int1) int2))
+      `)
+      expect(res.name).to.equal(FalseSymbol)
+    })
 
   })
 })
