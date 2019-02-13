@@ -12,7 +12,7 @@ type SplitText = string;
 const BUILTINS_PREFIXER = 'BUILTIN__';
 
 const SymbolMap = {
-  COMMENT    : '--',
+  COMMENT    : ';',
   OPEN_PARA  : '(',
   CLOSE_PARA : ')',
   LAMBDA_DEC : 'λ',

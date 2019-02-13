@@ -316,11 +316,11 @@ describe('Y-Combinator', () => {
 describe('Comments', () => {
   it('should completely remove comments', async () => {
     expect((await run(`
-      --- I am a comment
-      --- And I am too
+      ; I am a comment
+      ; And I am too
       True
-      -------- Event in this distance, I am a comment,
-      --- So far is true.
+      ;;;;;;;; Even in this distance, I am a comment,
+      ;;; So far is true.
     `)).name).to.equal(TruthSymbol);
   });
 });
