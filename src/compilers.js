@@ -82,6 +82,7 @@ const normalizeName = (name: string): string => {
     ['::', '_NS_'],
     ['-', '_'],
     ['?', 'T_Q_MARK'],
+    ['⟶', 'T_ARROW'],
   ];
   return transformations.reduce(((symbol, [from, to]) => symbol.replace(new RegExp('\\' + from, 'g'), to)), name);
 };
