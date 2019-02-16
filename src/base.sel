@@ -142,83 +142,83 @@
 (let Sign ((∧ True) False))
 
 ; Helpers
-(let Integer-To-Sign (λ int (Left Int)))
-(let Integer-To-Real (λ int (Right int)))
-(let Is-Positive (λ int ((∨ (Is-Zero (Integer-To-Real int))) (Left int))))
-(let Is-Negative (λ int (¬ (Is-Positive int))))
-(let To-Positive (λ int ((Integer Positive) (Right int))))
+(let Integer::⟶Sign (λ int (Left Int)))
+(let Integer::⟶Real (λ int (Right int)))
+(let Integer::Positive? (λ int ((∨ (Is-Zero (Integer::⟶Real int))) (Left int))))
+(let Integer::Negative? (λ int (¬ (Integer::Positive? int))))
+(let Integer::⟶PositiveInteger (λ int ((Integer Positive) (Right int))))
 
-(let IntegerSuccessor (λ n
-            (((Is-Zero (Integer-To-Real n)) 
+(let Integer::Successor (λ n
+            (((Is-Zero (Integer::⟶Real n)) 
                 ((Integer Positive) 1))
-                (((Is-Positive n) ((Integer Positive) (Successor (Integer-To-Real n))))
-                                  ((Integer Negative) (Predecessor (Integer-To-Real n)))))))
+                (((Integer::Positive? n) ((Integer Positive) (Successor (Integer::⟶Real n))))
+                                  ((Integer Negative) (Predecessor (Integer::⟶Real n)))))))
 
-(let IntegerPredecessor (λ n
-            (((Is-Zero (Integer-To-Real n)) 
+(let Integer::Predecessor (λ n
+            (((Is-Zero (Integer::⟶Real n)) 
                 ((Integer Negative) 1))
-                (((Is-Positive n) ((Integer Positive) (Predecessor (Integer-To-Real n))))
-                                  ((Integer Negative) (Successor (Integer-To-Real n))))))))
+                (((Integer::Positive? n) ((Integer Positive) (Predecessor (Integer::⟶Real n))))
+                                  ((Integer Negative) (Successor (Integer::⟶Real n))))))))
 
 
 
 ; Integer Operations
-(let IntegerAddition      (λ m (λ n (((Integer-To-Real n)
-                            (((Is-Positive n) 
-                                IntegerSuccessor)
-                                IntegerPredecessor))
+(let Integer::+  (λ m (λ n (((Integer::⟶Real n)
+                            (((Integer::Positive? n) 
+                                Integer::Successor)
+                                Integer::Predecessor))
                             m))))
 
-(let IntegerSubstraction  (λ m (λ n (((Integer-To-Real n)
-                            (((Is-Positive n) 
-                                IntegerPredecessor)
-                                IntegerSuccessor))
+(let Integer::-  (λ m (λ n (((Integer::⟶Real n)
+                            (((Integer::Positive? n) 
+                                Integer::Predecessor)
+                                Integer::Successor))
                             m))))
 
 
-(let IntegerLTE (λ n (λ m
-    ((((∧ (Is-Positive n)) (Is-Negative m)) ; When left is positive the result is always True
+(let Integer::≥ (λ n (λ m
+    ((((∧ (Integer::Positive? n)) (Integer::Negative? m)) ; When left is positive the result is always True
         True)
-    ((((∧ (Is-Positive n)) (Is-Positive m)) ; When both are positive it's ≥ on the real values
-        ((≥ (Integer-To-Real n)) (Integer-To-Real m)))
-    ((((∧ (Is-Negative n)) (Is-Negative m)) ; When both are negative it's ≤ on the real values
-        ((≤ (Integer-To-Real n)) (Integer-To-Real m)))
-        False))) ; in any other case (i.e, left is negative and right is positive) the result is false
-)))
+    ((((∧ (Integer::Positive? n)) (Integer::Positive? m)) ; When both are positive it's ≥ on the real values
+        ((≥ (Integer::⟶Real n)) (Integer::⟶Real m)))
+    ((((∧ (Integer::Negative? n)) (Integer::Negative? m)) ; When both are negative it's ≤ on the real values
+        ((≤ (Integer::⟶Real n)) (Integer::⟶Real m)))
+        False)))))) ; in any other case (i.e, left is negative and right is positive) the result is false
+
 
 ;
 ; A small helper to decide the sign of a product of two Integers.
 ;
-(let IntegerMultipicationSign (λ m (λ n
-    ((((∧ (Is-Negative n)) (Is-Negative m))
+(let Sign::* (λ m (λ n
+    ((((∧ (Integer::Negative? n)) (Integer::Negative? m))
         Positive)
-     ((((∨ (Is-Negative n)) (Is-Negative m))
+     ((((∨ (Integer::Negative? n)) (Integer::Negative? m))
         Negative)
         Positive)))))
 
 ; Multiplying Integers is simply a pair of the product of signs and product of reals.
-(let IntegerMultiplication (λ m (λ n
+(let Integer::* (λ m (λ n
     ((Integer 
-        ((IntegerMultipicationSign m) n))
-    ((* (Integer-To-Real m)) (Integer-To-Real n))))))
+        ((Sign::* m) n))
+        ((* (Integer::⟶Real m)) (Integer::⟶Real n))))))
 
 
 ; Works only for two positive integers
-(let IntegerRealValueDivision (Y (λ f (λ x (λ divisor
-  ((((If ((IntegerLTE x) divisor))
-   (λ _ (IntegerSuccessor ((f ((IntegerSubstraction x) divisor)) divisor))))
+(let Integer::RealValueDivision (Y (λ f (λ x (λ divisor
+  ((((If ((Integer::≥ x) divisor))
+   (λ _ (Integer::Successor ((f ((Integer::- x) divisor)) divisor))))
    (λ _ ((Integer Positive) 0)))
    ∅))))))
 
 ; Calculate the sign and the real value separetely and return in a new Integer
-(let IntegerDivision (λ n (λ m 
-    ((Integer ((IntegerMultipicationSign n) m)) ; Same sign product rules apply for division as for multiplication
-               (Integer-To-Real ((IntegerRealValueDivision (To-Positive n)) (To-Positive m)))))))
+(let Integer::Division (λ n (λ m 
+    ((Integer ((Sign::* n) m)) ; Same sign product rules apply for division as for multiplication
+               (Integer::⟶Real ((Integer::RealValueDivision (Integer::⟶PositiveInteger n)) (Integer::⟶PositiveInteger m)))))))
 
 ; Only works on positive integers.
 ; If anyone has a good paper to reference me, or even better, explain me like I'm 5 how to calculate remainder of mixed signs in Lambda Calculus, LMK.
-(let IntegerRemainder (Y (λ f (λ x (λ divisor
-  ((((If ((IntegerLTE x) divisor))
-   (λ _ ((f ((IntegerSubstraction x) divisor)) divisor)))
+(let Integer::Remainder (Y (λ f (λ x (λ divisor
+  ((((If ((Integer::≥ x) divisor))
+   (λ _ ((f ((Integer::- x) divisor)) divisor)))
    (λ _ x))
    ∅))))))

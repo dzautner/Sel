@@ -462,47 +462,47 @@ describe('Integers', () => {
   })
   
   it('should correctly identify sign of an integer', async () => {
-    expect((await run('(Is-Positive ((Integer Negative) 10))')).name).to.equal(FalseSymbol);
-    expect((await run('(Is-Positive ((Integer Positive) 3))')).name).to.equal(TruthSymbol);
+    expect((await run('(Integer::Positive? ((Integer Negative) 10))')).name).to.equal(FalseSymbol);
+    expect((await run('(Integer::Positive? ((Integer Positive) 3))')).name).to.equal(TruthSymbol);
   })
 
   it('should correctly convert an integer to a real number', async () => {
-    expect(await run(`(toJSNumber (Integer-To-Real ((Integer Positive) 5)))`)).to.equal(5);
-    expect(await run(`(toJSNumber (Integer-To-Real ((Integer Negative) 5)))`)).to.equal(5);
-    expect(await run(`(toJSNumber (Integer-To-Real ((Integer Negative) 10)))`)).to.equal(10);
+    expect(await run(`(toJSNumber (Integer::⟶Real ((Integer Positive) 5)))`)).to.equal(5);
+    expect(await run(`(toJSNumber (Integer::⟶Real ((Integer Negative) 5)))`)).to.equal(5);
+    expect(await run(`(toJSNumber (Integer::⟶Real ((Integer Negative) 10)))`)).to.equal(10);
   })
 
-  describe('IntegerSuccessor', async () => {
+  describe('Integer::Successor', async () => {
     it('should increase the absolute value of a positive integer by 1', async () => {
-      expect(await run(`(toJSInteger (IntegerSuccessor ((Integer Positive) 2)))`)).to.equal(3);
+      expect(await run(`(toJSInteger (Integer::Successor ((Integer Positive) 2)))`)).to.equal(3);
     })
     it('should increase the absolute value of a 0 by 1', async () => {
-      expect(await run(`(toJSInteger (IntegerSuccessor ((Integer Positive) 0)))`)).to.equal(1);
+      expect(await run(`(toJSInteger (Integer::Successor ((Integer Positive) 0)))`)).to.equal(1);
     })
     it('should decrease the absolute value of a negative integer by 1', async () => {
-      expect(await run(`(toJSInteger (IntegerSuccessor ((Integer Negative) 5)))`)).to.equal(-4);
+      expect(await run(`(toJSInteger (Integer::Successor ((Integer Negative) 5)))`)).to.equal(-4);
     })
   })
 
-  describe('IntegerPredecessor', async () => {
+  describe('Integer::Predecessor', async () => {
     it('should decrease the absolute value of a positive integer by 1', async () => {
-      expect(await run(`(toJSInteger (IntegerPredecessor ((Integer Positive) 2)))`)).to.equal(1);
+      expect(await run(`(toJSInteger (Integer::Predecessor ((Integer Positive) 2)))`)).to.equal(1);
     })
     it('should increase the decrease value of a 0 by 1', async () => {
-      expect(await run(`(toJSInteger (IntegerPredecessor ((Integer Positive) 0)))`)).to.equal(-1);
+      expect(await run(`(toJSInteger (Integer::Predecessor ((Integer Positive) 0)))`)).to.equal(-1);
     })
     it('should increase the absolute value of a negative integer by 1', async () => {
-      expect(await run(`(toJSInteger (IntegerPredecessor ((Integer Negative) 5)))`)).to.equal(-6);
+      expect(await run(`(toJSInteger (Integer::Predecessor ((Integer Negative) 5)))`)).to.equal(-6);
     })
   })
 
-  describe('IntegerAddition', async () => {
+  describe('Integer::+', async () => {
     
     it('should correctly add two positive integers', async () => {
       expect(await run(`
           (let int1 ((Integer Positive) 2))
           (let int2 ((Integer Positive) 5))
-          (toJSInteger ((IntegerAddition int1) int2))
+          (toJSInteger ((Integer::+ int1) int2))
       `)).to.equal(7);
     })
 
@@ -510,13 +510,13 @@ describe('Integers', () => {
       expect(await run(`
           (let int1 ((Integer Negative) 3))
           (let int2 ((Integer Negative) 2))
-          (toJSInteger ((IntegerAddition int1) int2))
+          (toJSInteger ((Integer::+ int1) int2))
       `)).to.equal(-5);
       
       expect(await run(`
           (let int1 ((Integer Negative) 8))
           (let int2 ((Integer Negative) 1))
-          (toJSInteger ((IntegerAddition int1) int2))
+          (toJSInteger ((Integer::+ int1) int2))
       `)).to.equal(-9);
     })
 
@@ -524,12 +524,12 @@ describe('Integers', () => {
       expect(await run(`
           (let int1 ((Integer Positive) 3))
           (let int2 ((Integer Negative) 7))
-          (toJSInteger ((IntegerAddition int1) int2))
+          (toJSInteger ((Integer::+ int1) int2))
       `)).to.equal(-4);
       expect(await run(`
           (let int1 ((Integer Negative) 2))
           (let int2 ((Integer Positive) 8))
-          (toJSInteger ((IntegerAddition int1) int2))
+          (toJSInteger ((Integer::+ int1) int2))
       `)).to.equal(6);
     })
 
@@ -537,32 +537,32 @@ describe('Integers', () => {
       expect(await run(`
           (let int1 ((Integer Negative) 0))
           (let int2 ((Integer Positive) 0))
-          (toJSInteger ((IntegerAddition int1) int2))
+          (toJSInteger ((Integer::+ int1) int2))
       `)).to.equal(0);
 
       expect(await run(`
           (let int1 ((Integer Negative) 0))
           (let int2 ((Integer Positive) 5))
-          (toJSInteger ((IntegerAddition int1) int2))
+          (toJSInteger ((Integer::+ int1) int2))
       `)).to.equal(5);
 
       expect(await run(`
           (let int1 ((Integer Positive) 0))
           (let int2 ((Integer Negative) 5))
-          (toJSInteger ((IntegerAddition int1) int2))
+          (toJSInteger ((Integer::+ int1) int2))
       `)).to.equal(-5);
     })
 
     
   })
 
-  describe('IntegerSubstraction', async () => {
+  describe('Integer::-', async () => {
     
     it('should correctly substract two positive integers', async () => {
       expect(await run(`
           (let int1 ((Integer Positive) 2))
           (let int2 ((Integer Positive) 5))
-          (toJSInteger ((IntegerSubstraction int1) int2))
+          (toJSInteger ((Integer::- int1) int2))
       `)).to.equal(-3);
     })
 
@@ -570,13 +570,13 @@ describe('Integers', () => {
       expect(await run(`
           (let int1 ((Integer Negative) 3))
           (let int2 ((Integer Negative) 2))
-          (toJSInteger ((IntegerSubstraction int1) int2))
+          (toJSInteger ((Integer::- int1) int2))
       `)).to.equal(-1);
       
       expect(await run(`
           (let int1 ((Integer Negative) 8))
           (let int2 ((Integer Negative) 1))
-          (toJSInteger ((IntegerSubstraction int1) int2))
+          (toJSInteger ((Integer::- int1) int2))
       `)).to.equal(-7);
     })
 
@@ -584,12 +584,12 @@ describe('Integers', () => {
       expect(await run(`
           (let int1 ((Integer Positive) 3))
           (let int2 ((Integer Negative) 7))
-          (toJSInteger ((IntegerSubstraction int1) int2))
+          (toJSInteger ((Integer::- int1) int2))
       `)).to.equal(10);
       expect(await run(`
           (let int1 ((Integer Negative) 2))
           (let int2 ((Integer Positive) 8))
-          (toJSInteger ((IntegerSubstraction int1) int2))
+          (toJSInteger ((Integer::- int1) int2))
       `)).to.equal(-10);
     })
 
@@ -597,30 +597,30 @@ describe('Integers', () => {
       expect(await run(`
           (let int1 ((Integer Negative) 0))
           (let int2 ((Integer Positive) 0))
-          (toJSInteger ((IntegerSubstraction int1) int2))
+          (toJSInteger ((Integer::- int1) int2))
       `)).to.equal(0);
 
       expect(await run(`
           (let int1 ((Integer Negative) 0))
           (let int2 ((Integer Positive) 5))
-          (toJSInteger ((IntegerSubstraction int1) int2))
+          (toJSInteger ((Integer::- int1) int2))
       `)).to.equal(-5);
 
       expect(await run(`
           (let int1 ((Integer Positive) 0))
           (let int2 ((Integer Negative) 5))
-          (toJSInteger ((IntegerSubstraction int1) int2))
+          (toJSInteger ((Integer::- int1) int2))
       `)).to.equal(5);
     })
   })
 
-  describe('IntegerMultipicationSign', () => {
+  describe('Sign::*', () => {
 
     it('should return Positive for two Positives', async () => {
       const res = await run(`
         (let int1 ((Integer Positive) 1))
         (let int2 ((Integer Positive) 1))
-        ((IntegerMultipicationSign int1) int2))
+        ((Sign::* int1) int2))
       `)
       expect(res.name).to.equal(TruthSymbol)
     })
@@ -629,7 +629,7 @@ describe('Integers', () => {
       const res = await run(`
         (let int1 ((Integer Negative) 1))
         (let int2 ((Integer Negative) 1))
-        ((IntegerMultipicationSign int1) int2))
+        ((Sign::* int1) int2))
       `)
       expect(res.name).to.equal(TruthSymbol)
     })
@@ -638,7 +638,7 @@ describe('Integers', () => {
       const res = await run(`
         (let int1 ((Integer Positive) 1))
         (let int2 ((Integer Negative) 1))
-        ((IntegerMultipicationSign int1) int2))
+        ((Sign::* int1) int2))
       `)
       expect(res.name).to.equal(FalseSymbol)
     })
@@ -647,19 +647,19 @@ describe('Integers', () => {
       const res = await run(`
         (let int1 ((Integer Negative) 1))
         (let int2 ((Integer Positive) 1))
-        ((IntegerMultipicationSign int1) int2))
+        ((Sign::* int1) int2))
       `)
       expect(res.name).to.equal(FalseSymbol)
     })
   })
 
-  describe('IntegerMultiplication', () => {
+  describe('Integer::*', () => {
 
     it('Correctly multiplies two positive integers', async () => {
       expect(await run(`
           (let int1 ((Integer Positive) 2))
           (let int2 ((Integer Positive) 5))
-          (toJSInteger ((IntegerMultiplication int1) int2))
+          (toJSInteger ((Integer::* int1) int2))
       `)).to.equal(10);
     })
 
@@ -667,7 +667,7 @@ describe('Integers', () => {
       expect(await run(`
           (let int1 ((Integer Negative) 7))
           (let int2 ((Integer Negative) 3))
-          (toJSInteger ((IntegerMultiplication int1) int2))
+          (toJSInteger ((Integer::* int1) int2))
       `)).to.equal(21);
     })
 
@@ -675,7 +675,7 @@ describe('Integers', () => {
       expect(await run(`
           (let int1 ((Integer Negative) 2))
           (let int2 ((Integer Positive) 4))
-          (toJSInteger ((IntegerMultiplication int1) int2))
+          (toJSInteger ((Integer::* int1) int2))
       `)).to.equal(-8);
     })
 
@@ -683,18 +683,18 @@ describe('Integers', () => {
       expect(await run(`
           (let int1 ((Integer Positive) 3))
           (let int2 ((Integer Negative) 4))
-          (toJSInteger ((IntegerMultiplication int1) int2))
+          (toJSInteger ((Integer::* int1) int2))
       `)).to.equal(-12);
     })
   })
   
-  describe('IntegerLTE', () => {
+  describe('Integer::≥', () => {
 
     it('Correctly returns when both integers are positive and left is larger', async () => {
       const res = await run(`
         (let int1 ((Integer Positive) 2))
         (let int2 ((Integer Positive) 1))
-        ((IntegerLTE int1) int2))
+        ((Integer::≥ int1) int2))
       `)
       expect(res.name).to.equal(TruthSymbol)
     })
@@ -703,7 +703,7 @@ describe('Integers', () => {
       const res = await run(`
         (let int1 ((Integer Positive) 4))
         (let int2 ((Integer Positive) 7))
-        ((IntegerLTE int1) int2))
+        ((Integer::≥ int1) int2))
       `)
       expect(res.name).to.equal(FalseSymbol)
     })
@@ -712,7 +712,7 @@ describe('Integers', () => {
       const res = await run(`
         (let int1 ((Integer Positive) 4))
         (let int2 ((Integer Positive) 4))
-        ((IntegerLTE int1) int2))
+        ((Integer::≥ int1) int2))
       `)
       expect(res.name).to.equal(TruthSymbol)
     })
@@ -721,7 +721,7 @@ describe('Integers', () => {
       const res = await run(`
         (let int1 ((Integer Positive) 0))
         (let int2 ((Integer Positive) 0))
-        ((IntegerLTE int1) int2))
+        ((Integer::≥ int1) int2))
       `)
       expect(res.name).to.equal(TruthSymbol)
     })
@@ -731,7 +731,7 @@ describe('Integers', () => {
       const res1 = await run(`
         (let int1 ((Integer Negative) 2))
         (let int2 ((Integer Negative) 1))
-        ((IntegerLTE int1) int2))
+        ((Integer::≥ int1) int2))
       `)
       expect(res1.name).to.equal(FalseSymbol)
     })
@@ -740,7 +740,7 @@ describe('Integers', () => {
       const res1 = await run(`
         (let int1 ((Integer Negative) 5))
         (let int2 ((Integer Negative) 8))
-        ((IntegerLTE int1) int2))
+        ((Integer::≥ int1) int2))
       `)
       expect(res1.name).to.equal(TruthSymbol)
     })
@@ -750,7 +750,7 @@ describe('Integers', () => {
       const res1 = await run(`
         (let int1 ((Integer Negative) 5))
         (let int2 ((Integer Negative) 5))
-        ((IntegerLTE int1) int2))
+        ((Integer::≥ int1) int2))
       `)
       expect(res1.name).to.equal(TruthSymbol)
     })
@@ -760,7 +760,7 @@ describe('Integers', () => {
       const res = await run(`
         (let int1 ((Integer Positive) 1))
         (let int2 ((Integer Negative) 1))
-        ((IntegerLTE int1) int2))
+        ((Integer::≥ int1) int2))
       `)
       expect(res.name).to.equal(TruthSymbol)
     })
@@ -769,19 +769,19 @@ describe('Integers', () => {
       const res = await run(`
         (let int1 ((Integer Negative) 1))
         (let int2 ((Integer Positive) 1))
-        ((IntegerLTE int1) int2))
+        ((Integer::≥ int1) int2))
       `)
       expect(res.name).to.equal(FalseSymbol)
     })
 
   })
 
-  describe('IntegerDivision', () => { 
+  describe('Integer::Division', () => { 
     it('Correctly divides two positives numbers #1', async () => {
       expect(await run(`
           (let int1 ((Integer Positive) 10))
           (let int2 ((Integer Positive) 2))
-          (toJSInteger ((IntegerDivision int1) int2))
+          (toJSInteger ((Integer::Division int1) int2))
       `)).to.equal(5);
     })
     
@@ -789,7 +789,7 @@ describe('Integers', () => {
       expect(await run(`
           (let int1 ((Integer Positive) 6))
           (let int2 ((Integer Positive) 2))
-          (toJSInteger ((IntegerDivision int1) int2))
+          (toJSInteger ((Integer::Division int1) int2))
       `)).to.equal(3);
     })
 
@@ -797,7 +797,7 @@ describe('Integers', () => {
       expect(await run(`
           (let int1 ((Integer Negative) 6))
           (let int2 ((Integer Negative) 3))
-          (toJSInteger ((IntegerDivision int1) int2))
+          (toJSInteger ((Integer::Division int1) int2))
       `)).to.equal(2);
     })
 
@@ -805,7 +805,7 @@ describe('Integers', () => {
       expect(await run(`
           (let int1 ((Integer Negative) 6))
           (let int2 ((Integer Positive) 3))
-          (toJSInteger ((IntegerDivision int1) int2))
+          (toJSInteger ((Integer::Division int1) int2))
       `)).to.equal(-2);
     })
 
@@ -813,31 +813,31 @@ describe('Integers', () => {
       expect(await run(`
           (let int1 ((Integer Positive) 9))
           (let int2 ((Integer Negative) 3))
-          (toJSInteger ((IntegerDivision int1) int2))
+          (toJSInteger ((Integer::Division int1) int2))
       `)).to.equal(-3);
     })
   })
 
-  describe('IntegerRemainder', () => {
+  describe('Integer::Remainder', () => {
     it('should return correctly the Remainder for two positive numbers #1', async () => {
       expect(await run(`
           (let int1 ((Integer Positive) 10))
           (let int2 ((Integer Positive) 3))
-          (toJSInteger ((IntegerRemainder int1) int2))
+          (toJSInteger ((Integer::Remainder int1) int2))
       `)).to.equal(1);
     })
     it('should return correctly the Remainder for two positive numbers #2', async () => {
       expect(await run(`
           (let int1 ((Integer Positive) 7))
           (let int2 ((Integer Positive) 4))
-          (toJSInteger ((IntegerRemainder int1) int2))
+          (toJSInteger ((Integer::Remainder int1) int2))
       `)).to.equal(3);
     })
     it('should return correctly the Remainder for two equal positive', async () => {
       expect(await run(`
           (let int1 ((Integer Positive) 4))
           (let int2 ((Integer Positive) 4))
-          (toJSInteger ((IntegerRemainder int1) int2))
+          (toJSInteger ((Integer::Remainder int1) int2))
       `)).to.equal(0);
     })
   })
