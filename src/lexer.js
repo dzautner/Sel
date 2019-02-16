@@ -41,34 +41,6 @@ const cleanNewLines = (text: string) => text.replace(/\n/g, ``);
 
 const cleanSpaces = (symbols: SymbolType[]) => symbols.filter(t => t !== '');
 
-const normalizeName = (name: string): string => {
-  //TODO: move digit cleaning to parser?
-  const isDigit = /^\d+$/.test(name);
-  if (isDigit) {
-    return `${BUILTINS_PREFIXER}_${name}`;
-  }
-  switch (name) {
-  case '-': return 'T_MINUS';
-  case '+': return 'T_PLUS';
-  case '*': return 'T_MULTIPICATION';
-  case '=': return 'T_EQUAL';
-  case '≠': return 'T_NOT_EQUAL';
-  case '∅': return 'T_NULL';
-  case '∧': return 'T_AND';
-  case '∨': return 'T_OR';
-  case '¬': return 'T_NOT';
-  case 'If': return 'T_IF';
-  case 'True': return 'T_TRUE';
-  case 'False': return 'T_FALSE';
-  case '<': return 'T_IS_L_THAN';
-  case '≤': return 'T_IS_L_THAN_EQ';
-  case '>': return 'T_IS_G_THAN';
-  case '≥': return 'T_IS_G_THAN_EQ';
-  case ' ∈ ': return '_IN_SET_';
-  default:  return name.replace(/\-/g, '_');
-  }
-};
-
 const classify = (symbol: SymbolType): TokenType => {
   switch (symbol) {
   case SymbolMap.COMMENT:
@@ -84,7 +56,7 @@ const classify = (symbol: SymbolType): TokenType => {
   case SymbolMap.NEW_LINE:
     return { type: 'NEW_LINE' };
   default:
-    return { type: 'ATOM', name: normalizeName(symbol) };
+    return { type: 'ATOM', name: symbol };
   }
 };
 
