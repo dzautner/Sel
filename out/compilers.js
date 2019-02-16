@@ -46,16 +46,27 @@ const getCompiler = tokenHandlers => {
   };
 };
 
+const BUILTINS_PREFIXER = 'BUILTIN__';
+
+const normalizeName = name => {
+  const isDigit = /^\d+$/.test(name);
+  if (isDigit) {
+    return `${BUILTINS_PREFIXER}_${name}`;
+  }
+  const transformations = [['-', 'T_MINUS'], ['-', 'T_MINUS'], ['+', 'T_PLUS'], ['*', 'T_MULTIPICATION'], ['=', 'T_EQUAL'], ['≠', 'T_NOT_EQUAL'], ['∅', 'T_NULL'], ['∧', 'T_AND'], ['∨', 'T_OR'], ['¬', 'T_NOT'], ['If', 'T_IF'], ['True', 'T_TRUE'], ['False', 'T_FALSE'], ['<', 'T_IS_L_THAN'], ['≤', 'T_IS_L_THAN_EQ'], ['>', 'T_IS_G_THAN'], ['≥', 'T_IS_G_THAN_EQ'], ['::', '_NS_'], ['-', '_'], ['?', 'T_Q_MARK'], ['⟶', 'T_ARROW']];
+  return transformations.reduce((symbol, [from, to]) => symbol.replace(new RegExp('\\' + from, 'g'), to), name);
+};
+
 const javaScriptBuiltins = _fs2.default.readFileSync(_path2.default.resolve(__dirname, './builtins.js')) + '\n';
 
 const pythonBuiltins = _fs2.default.readFileSync(_path2.default.resolve(__dirname, './builtins.py')) + '\n';
 
 const JavaScript = getCompiler({
   PROGRAM: (node, compile) => javaScriptBuiltins + node.children.map(compile).join(';\n') + ';',
-  VAR_DEC: (node, compile) => `const ${node.body.name} = ${node.children.map(compile).join('')}`,
+  VAR_DEC: (node, compile) => `const ${normalizeName(node.body.name)} = ${node.children.map(compile).join('')}`,
   LAMBDA_DEC: (node, compile) => `(${node.body.input} => ${node.children.map(compile).join('')})`,
   LAMBDA_APPLICATION: (node, compile) => `${compile(node.body.lambda)}(${compile(node.body.argument)})`,
-  ATOM: (node, compile) => node.body.name,
+  ATOM: (node, compile) => normalizeName(node.body.name),
   LIST: (node, compile) => node.children.map(compile).join('')
 });
 

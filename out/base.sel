@@ -1,13 +1,12 @@
-
------------------------------------------------------
--- Let there be light! 
--- https://en.wikipedia.org/wiki/Identity_function
------------------------------------------------------
+;
+; Let there be light! 
+; https://en.wikipedia.org/wiki/Identity_function
+;
 (let Identity        (λ x x))
 
--------------------
--- Boolean Logic --
--------------------
+;
+; Boolean Logic
+;
 (let True            (λ t (λ f t)))
 (let False           (λ t (λ f f)))
 (let ∧               (λ p (λ q ((p q) p))))
@@ -15,10 +14,10 @@
 (let ¬               (λ c ((c False) True)))
 (let If              (λ c (λ t (λ f ((c t) f)))))
 
------------------------------------------------------
--- Real Numbers & Numerical Operations with Church Numerals
--- See: https://en.wikipedia.org/wiki/Church_encoding#Church_numerals
------------------------------------------------------
+;
+; Real Numbers & Numerical Operations with Church Numerals
+; See: https://en.wikipedia.org/wiki/Church_encoding#Church_numerals
+;
 
 (let 0               (λ f Identity))
 (let Is-Zero         (λ n ((n (λ _ False)) True)))
@@ -51,19 +50,57 @@
 (let 9               (Successor 8))
 (let 10              (Successor 9))
 
+
+;
+; The Y combinator, allowing recrusive definitions without "cheating" by using named functions.
+;
+;  λf· (λx· f (x x)) (λx· f (x x))
+;
+; "Discovered" (or "Invented", depends on the reader) by Haskell B. Curry,
+; It truly one of the cuter Sudokus in Lambda Calculus.
+;
+; Once we are able to use recursion, there is nothing really stopping us from structuring complex algorithms.
+;
 (let Y         (λ f ((λ x (f (λ y ((x x) y)))) (λ x (f (λ y ((x x) y)))))))
 
+
+; A pair is our first data-structure that can hold arbitary data.
+; The implementation is quite clear, it simply accepts two values to "pack"
+; and returns a function that could have a function applied that that would have those two values "unpacked" into.
 (let Pair      (λ x (λ y (λ f ((f x) y)))))
+
+; Helpers for returning the Left/Right side of the pair
 (let Left      (λ p (p True)))
 (let Right     (λ p (p False)))
 
+; A Triple has a similar implementation to the Pair, but with 3 values instead.
 (let Triple    (λ x (λ y (λ z (λ f (((f x) y) z))))))
+
+;
+; Linked Lists
+;
+
+; The List implemenation is simply using the Triple defined before to hold 3 references:
+; A Value of the current Node
+; The rest of the List
+; A flag indicating is the list empty or not.
+;
+; Note the later is not exactly nessecery as we could have used a Null terminator in the value field
+; and only use a pair for the implementation, but implementing using a Triple and a flag proved easier. 
 (let List      (λ h (λ t (((Triple h) t) False))))
 (let EmptyList (((Triple 0) 0) True))
+
+; The head of the list is simple the left most part of the Triple
 (let Head      (λ l (l (λ h (λ t (λ n h))))))
+
+; The tail is the middle part of the Triple
 (let Tail      (λ l (l (λ h (λ t (λ n t))))))
+
+; Is-Empty is the flag in the right most part of the Triple.
 (let Is-Empty  (λ l (l (λ h (λ t (λ n n))))))
 
+
+; A show case of common algorithms using the Linked List implementation above and the Y combinator. 
 (let Nth (Y (λ f (λ l (λ n
   ((((If (Is-Zero n))
    (λ _ (Head l)))
@@ -89,55 +126,99 @@
    ∅))))
   EmptyList))))
 
----------------------
--- Signed Integers --
----------------------
 
+;
+; Signed Integers
+;
+
+; Integer signs:
 (let Positive True)
 (let Negative False)
+
+; An integer is just a pair of a sign an a real number
 (let Integer ((λ sign (λ number ((Pair sign) number)))))
-(let Integer-To-Sign (λ int (Left Int)))
-(let Integer-To-Real (λ int (Right int)))
-(let Is-Positive (λ int (Left int)))
-(let Is-Negative (λ int (¬ (Is-Positive int))))
 
-(let IntegerSuccessor (λ n
-    (((Is-Zero (Integer-To-Real n)) 
-        ((Integer Positive) 1))
-        (((Is-Positive n) ((Integer Positive) (Successor (Integer-To-Real n))))
-                          ((Integer Negative) (Predecessor (Integer-To-Real n))))))
-))
+; For the sake of defintion, let's write down the definition of a Sign.
+(let Sign ((∧ True) False))
 
-(let IntegerPredecessor (λ n
-    (((Is-Zero (Integer-To-Real n)) 
-        ((Integer Negative) 1))
-        (((Is-Positive n) ((Integer Positive) (Predecessor (Integer-To-Real n))))
-                          ((Integer Negative) (Successor (Integer-To-Real n))))))
-))
+; Helpers
+(let Integer::⟶Sign (λ int (Left Int)))
+(let Integer::⟶Real (λ int (Right int)))
+(let Integer::Positive? (λ int ((∨ (Is-Zero (Integer::⟶Real int))) (Left int))))
+(let Integer::Negative? (λ int (¬ (Integer::Positive? int))))
+(let Integer::⟶PositiveInteger (λ int ((Integer Positive) (Right int))))
 
-(let IntegerAddition      (λ m (λ n (((Integer-To-Real n)
-                            (((Is-Positive n) 
-                                IntegerSuccessor)
-                                IntegerPredecessor))
+(let Integer::Successor (λ n
+            (((Is-Zero (Integer::⟶Real n)) 
+                ((Integer Positive) 1))
+                (((Integer::Positive? n) ((Integer Positive) (Successor (Integer::⟶Real n))))
+                                  ((Integer Negative) (Predecessor (Integer::⟶Real n)))))))
+
+(let Integer::Predecessor (λ n
+            (((Is-Zero (Integer::⟶Real n)) 
+                ((Integer Negative) 1))
+                (((Integer::Positive? n) ((Integer Positive) (Predecessor (Integer::⟶Real n))))
+                                  ((Integer Negative) (Successor (Integer::⟶Real n))))))))
+
+
+
+; Integer Operations
+(let Integer::+  (λ m (λ n (((Integer::⟶Real n)
+                            (((Integer::Positive? n) 
+                                Integer::Successor)
+                                Integer::Predecessor))
                             m))))
 
-(let IntegerSubstraction  (λ m (λ n (((Integer-To-Real n)
-                            (((Is-Positive n) 
-                                IntegerPredecessor)
-                                IntegerSuccessor))
+(let Integer::-  (λ m (λ n (((Integer::⟶Real n)
+                            (((Integer::Positive? n) 
+                                Integer::Predecessor)
+                                Integer::Successor))
                             m))))
 
-(let IntegerMultipicationSign (λ m (λ n
-    ((((∧ (Is-Negative n)) (Is-Negative m))
+
+(let Integer::≥ (λ n (λ m
+    ((((∧ (Integer::Positive? n)) (Integer::Negative? m)) ; When left is positive the result is always True
+        True)
+    ((((∧ (Integer::Positive? n)) (Integer::Positive? m)) ; When both are positive it's ≥ on the real values
+        ((≥ (Integer::⟶Real n)) (Integer::⟶Real m)))
+    ((((∧ (Integer::Negative? n)) (Integer::Negative? m)) ; When both are negative it's ≤ on the real values
+        ((≤ (Integer::⟶Real n)) (Integer::⟶Real m)))
+        False)))))) ; in any other case (i.e, left is negative and right is positive) the result is false
+
+
+;
+; A small helper to decide the sign of a product of two Integers.
+;
+(let Sign::* (λ m (λ n
+    ((((∧ (Integer::Negative? n)) (Integer::Negative? m))
         Positive)
-     ((((∨ (Is-Negative n)) (Is-Negative m))
+     ((((∨ (Integer::Negative? n)) (Integer::Negative? m))
         Negative)
-        Positive))
-)))
+        Positive)))))
 
-(let IntegerMultiplication (λ m (λ n
+; Multiplying Integers is simply a pair of the product of signs and product of reals.
+(let Integer::* (λ m (λ n
     ((Integer 
-        ((IntegerMultipicationSign m) n))
-    ((* (Integer-To-Real m)) (Integer-To-Real n)))
-)))
+        ((Sign::* m) n))
+        ((* (Integer::⟶Real m)) (Integer::⟶Real n))))))
 
+
+; Works only for two positive integers
+(let Integer::RealValueDivision (Y (λ f (λ x (λ divisor
+  ((((If ((Integer::≥ x) divisor))
+   (λ _ (Integer::Successor ((f ((Integer::- x) divisor)) divisor))))
+   (λ _ ((Integer Positive) 0)))
+   ∅))))))
+
+; Calculate the sign and the real value separetely and return in a new Integer
+(let Integer::Division (λ n (λ m 
+    ((Integer ((Sign::* n) m)) ; Same sign product rules apply for division as for multiplication
+               (Integer::⟶Real ((Integer::RealValueDivision (Integer::⟶PositiveInteger n)) (Integer::⟶PositiveInteger m)))))))
+
+; Only works on positive integers.
+; If anyone has a good paper to reference me, or even better, explain me like I'm 5 how to calculate remainder of mixed signs in Lambda Calculus, LMK.
+(let Integer::Remainder (Y (λ f (λ x (λ divisor
+  ((((If ((Integer::≥ x) divisor))
+   (λ _ ((f ((Integer::- x) divisor)) divisor)))
+   (λ _ x))
+   ∅))))))
