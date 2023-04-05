@@ -15,6 +15,20 @@
 (let If              (λ c (λ t (λ f ((c t) f)))))
 
 ;
+; The Y combinator, allowing recrusive definitions without "cheating" by using named functions.
+;
+;  λf· (λx· f (x x)) (λx· f (x x))
+;
+; "Discovered" (or "Invented", depends on the reader) by Haskell B. Curry,
+; It truly one of the cuter Sudokus in Lambda Calculus.
+;
+; Once we are able to use recursion, there is nothing really stopping us from structuring complex algorithms.
+;
+(let Y         (λ f ((λ x (f (λ y ((x x) y)))) (λ x (f (λ y ((x x) y)))))))
+
+
+
+;
 ; Real Numbers & Numerical Operations with Church Numerals
 ; See: https://en.wikipedia.org/wiki/Church_encoding#Church_numerals
 ;
@@ -29,6 +43,31 @@
 (let *               (λ m (λ n (λ f (m (n f))))))
 (let Power           (λ x (λ y (y x))))
 (let Abs-Difference  (λ x (λ y ((+ ((- x) y)) ((- y) x)))))
+(let /               (Y (λ f (λ m (λ n
+                        ((((If (¬ ((≤ n) m)))
+                            (λ _ 0))
+                            (λ _ (Successor ((f ((- m) n)) n))))
+                        ∅))))))
+
+(let Mod             (Y (λ f (λ m (λ n
+                        ((((If ((< m) n))
+                            (λ _ m))
+                            (λ _ ((f ((- m) n)) n)))
+                        ∅))))))
+
+(let Factorial       (Y (λ f (λ n
+                        ((((If (Is-Zero n))
+                            (λ _ 1))
+                            (λ _ ((* n) (f (Predecessor n)))))
+                        ∅)))))
+
+(let GCD             (Y (λ f (λ a (λ b
+                        ((((If (Is-Zero b))
+                            (λ _ a))
+                            (λ _ ((f b) ((Mod a) b))))
+                        ∅))))))
+
+
 
 (let <               (λ m (λ n (¬ ((≤ n) m)))))
 (let ≤               (λ m (λ n (Is-Zero ((- m) n)))))
@@ -49,19 +88,47 @@
 (let 8               (Successor 7))
 (let 9               (Successor 8))
 (let 10              (Successor 9))
+(let 11              (Successor 10))
+(let 12              (Successor 11))
+(let 13              (Successor 12))
+(let 14              (Successor 13))
+(let 15              (Successor 14))
+(let 16              (Successor 15))
+(let 17              (Successor 16))
+(let 18              (Successor 17))
+(let 19              (Successor 18))
+(let 20              (Successor 19))
+(let 21              (Successor 20))
+(let 22              (Successor 21))
+(let 23              (Successor 22))
+(let 24              (Successor 23))
+(let 25              (Successor 24))
+(let 26              (Successor 25))
+(let 27              (Successor 26))
+(let 28              (Successor 27))
+(let 29              (Successor 28))
+(let 30              (Successor 29))
+(let 31              (Successor 30))
+(let 32              (Successor 31))
+(let 33              (Successor 32))
+(let 34              (Successor 33))
+(let 35              (Successor 34))
+(let 36              (Successor 35))
+(let 37              (Successor 36))
+(let 38              (Successor 37))
+(let 39              (Successor 38))
+(let 40              (Successor 39))
+(let 41              (Successor 40))
+(let 42              (Successor 41))
+(let 43              (Successor 42))
+(let 44              (Successor 43))
+(let 45              (Successor 44))
+(let 46              (Successor 45))
+(let 47              (Successor 46))
+(let 48              (Successor 47))
+(let 49              (Successor 48))
+(let 50              (Successor 49))
 
-
-;
-; The Y combinator, allowing recrusive definitions without "cheating" by using named functions.
-;
-;  λf· (λx· f (x x)) (λx· f (x x))
-;
-; "Discovered" (or "Invented", depends on the reader) by Haskell B. Curry,
-; It truly one of the cuter Sudokus in Lambda Calculus.
-;
-; Once we are able to use recursion, there is nothing really stopping us from structuring complex algorithms.
-;
-(let Y         (λ f ((λ x (f (λ y ((x x) y)))) (λ x (f (λ y ((x x) y)))))))
 
 
 ; A pair is our first data-structure that can hold arbitary data.
@@ -222,3 +289,5 @@
    (λ _ ((f ((Integer::- x) divisor)) divisor)))
    (λ _ x))
    ∅))))))
+
+

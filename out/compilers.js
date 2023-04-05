@@ -53,7 +53,7 @@ const normalizeName = name => {
   if (isDigit) {
     return `${BUILTINS_PREFIXER}_${name}`;
   }
-  const transformations = [['-', 'T_MINUS'], ['-', 'T_MINUS'], ['+', 'T_PLUS'], ['*', 'T_MULTIPICATION'], ['=', 'T_EQUAL'], ['≠', 'T_NOT_EQUAL'], ['∅', 'T_NULL'], ['∧', 'T_AND'], ['∨', 'T_OR'], ['¬', 'T_NOT'], ['If', 'T_IF'], ['True', 'T_TRUE'], ['False', 'T_FALSE'], ['<', 'T_IS_L_THAN'], ['≤', 'T_IS_L_THAN_EQ'], ['>', 'T_IS_G_THAN'], ['≥', 'T_IS_G_THAN_EQ'], ['::', '_NS_'], ['-', '_'], ['?', 'T_Q_MARK'], ['⟶', 'T_ARROW']];
+  const transformations = [['-', 'T_MINUS'], ['-', 'T_MINUS'], ['+', 'T_PLUS'], ['*', 'T_MULTIPICATION'], ['=', 'T_EQUAL'], ['≠', 'T_NOT_EQUAL'], ['∅', 'T_NULL'], ['∧', 'T_AND'], ['∨', 'T_OR'], ['¬', 'T_NOT'], ['If', 'T_IF'], ['True', 'T_TRUE'], ['False', 'T_FALSE'], ['<', 'T_IS_L_THAN'], ['≤', 'T_IS_L_THAN_EQ'], ['>', 'T_IS_G_THAN'], ['≥', 'T_IS_G_THAN_EQ'], ['::', '_NS_'], ['-', '_'], ['?', 'T_Q_MARK'], ['⟶', 'T_ARROW'], ['/', 'T_DIVISION']];
   return transformations.reduce((symbol, [from, to]) => symbol.replace(new RegExp('\\' + from, 'g'), to), name);
 };
 
