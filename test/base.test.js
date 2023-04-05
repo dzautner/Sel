@@ -168,6 +168,42 @@ describe('Numerals', () => {
     });
   });
 
+  describe('/', () => {
+    it('Should divide two given numbers', async () => {
+      const n1 = 6;
+      const n2 = 3;
+      const result = await run(`(toJSNumber ((/ ${n1}) ${n2}))`);
+      expect(result).to.equal(n1 / n2);
+    });
+  });
+
+  describe('Mod', () => {
+    it('Should return the modulo of two given numbers', async () => {
+      const n1 = 7;
+      const n2 = 3;
+      const result = await run(`(toJSNumber ((Mod ${n1}) ${n2}))`);
+      expect(result).to.equal(n1 % n2);
+    });
+  });
+
+  describe('Factorial', () => {
+    it('Should return the factorial of the given number', async () => {
+      const n = 5;
+      const expected = 120;
+      const result = await run(`(toJSNumber (Factorial ${n}))`);
+      expect(result).to.equal(expected);
+    });
+  });
+
+  describe('GCD', () => {
+    it('Should find the GCD of two given numbers', async () => {
+      const a = 14;
+      const b = 28;
+      const result = await run(`(toJSNumber ((GCD ${a}) ${b}))`);
+      expect(result).to.equal(14);
+    });
+  });
+
 });
 
 
