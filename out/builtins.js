@@ -7,6 +7,12 @@ const toJSNumber = number => {
   return counter;
 };
 
+const toJSPair = churchPair => {
+  const left = churchPair(true);
+  const right = churchPair(false);
+  return [toJSNumber(left), toJSNumber(right)];
+};
+
 const show = fn => {
   if (fn.name) {
     console.log(fn.name);
